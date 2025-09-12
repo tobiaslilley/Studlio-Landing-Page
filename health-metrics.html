@@ -153,6 +153,28 @@
         let allMetrics = [];
         let allNormsData = {};
         
+        // Test Supabase connection
+        async function testSupabaseConnection() {
+            try {
+                console.log('Testing Supabase connection...');
+                const { data, error } = await supabase
+                    .from('health_metrics')
+                    .select('count')
+                    .limit(1);
+                
+                if (error) {
+                    console.error('Supabase connection test failed:', error);
+                    return false;
+                }
+                
+                console.log('Supabase connection test successful');
+                return true;
+            } catch (error) {
+                console.error('Supabase connection test error:', error);
+                return false;
+            }
+        }
+        
         // Load health metrics from Supabase
         async function loadHealthMetrics() {
             const loadingEl = document.getElementById('loading');
@@ -166,6 +188,12 @@
                 errorEl.style.display = 'none';
                 metricsGridEl.style.display = 'none';
                 emptyStateEl.style.display = 'none';
+                
+                // Test connection first
+                const connectionOk = await testSupabaseConnection();
+                if (!connectionOk) {
+                    throw new Error('Failed to connect to Supabase database');
+                }
                 
                 // Fetch health metrics with norms data
                 const { data: metrics, error: metricsError } = await supabase
@@ -224,10 +252,28 @@
                 
             } catch (error) {
                 console.error('Error loading health metrics:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    code: error.code,
+                    details: error.details,
+                    hint: error.hint
+                });
                 
-                // Show error state
+                // Show error state with more details
                 loadingEl.style.display = 'none';
                 errorEl.style.display = 'block';
+                
+                // Update error message with more details
+                const errorMessage = document.querySelector('#error p');
+                if (errorMessage) {
+                    errorMessage.innerHTML = `
+                        There was an error connecting to our database.<br>
+                        <small style="color: #999; margin-top: 0.5rem; display: block;">
+                            Error: ${error.message || 'Unknown error'}<br>
+                            Code: ${error.code || 'N/A'}
+                        </small>
+                    `;
+                }
             }
         }
         
@@ -301,6 +347,13 @@
         function createChart(metric) {
             const canvas = document.getElementById(`chart-${metric.id}`);
             if (!canvas) return;
+            
+            // Check if Chart.js is available
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js not loaded');
+                canvas.parentElement.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">Chart library not available</p>';
+                return;
+            }
             
             const norms = metric.health_metric_norms || [];
             const ctx = canvas.getContext('2d');
