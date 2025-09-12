@@ -854,10 +854,61 @@ html {
 
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 500px);
+    grid-template-columns: 1fr;
     gap: 2rem;
     margin-top: 3rem;
     justify-content: center;
+}
+
+/* Responsive grid for different screen sizes */
+@media (min-width: 480px) {
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 375px) {
+    .metrics-grid {
+        gap: 1rem;
+    }
+    
+    .metric-card {
+        padding: 1rem;
+    }
+    
+    .metric-chart-container {
+        height: 200px;
+        padding: 0.5rem;
+    }
+    
+    .metric-title {
+        font-size: 1.1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .metrics-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1200px) {
+    .metrics-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1600px) {
+    .metrics-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
 }
 
 .metric-card {
@@ -920,6 +971,8 @@ html {
     background-color: #fafafa;
     border-radius: 10px;
     padding: 1rem;
+    width: 100%;
+    overflow: hidden;
 }
 
 .metric-chart {
@@ -1093,7 +1146,6 @@ html {
     }
     
     .metrics-grid {
-        grid-template-columns: 1fr;
         gap: 1.5rem;
     }
     
@@ -1114,6 +1166,7 @@ html {
     .metric-chart-container {
         height: 250px;
         padding: 0.8rem;
+        min-height: 200px;
     }
     
     .metric-stats {
