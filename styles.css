@@ -50,6 +50,29 @@ p {
     padding: 0 2rem;
 }
 
+/* Allow wider container for health metrics on large screens */
+.health-metrics .container {
+    max-width: 1200px;
+}
+
+@media (min-width: 1200px) {
+    .health-metrics .container {
+        max-width: 1600px;
+    }
+}
+
+@media (min-width: 1600px) {
+    .health-metrics .container {
+        max-width: 2200px;
+    }
+}
+
+@media (min-width: 2000px) {
+    .health-metrics .container {
+        max-width: 2800px;
+    }
+}
+
 /* Development Banner */
 .dev-banner {
     background: linear-gradient(135deg, #ff6b6b, #ff8e53);
@@ -831,9 +854,10 @@ html {
 
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fit, 500px);
     gap: 2rem;
     margin-top: 3rem;
+    justify-content: center;
 }
 
 .metric-card {

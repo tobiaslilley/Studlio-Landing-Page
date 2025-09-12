@@ -305,10 +305,25 @@
             const norms = metric.health_metric_norms || [];
             const ctx = canvas.getContext('2d');
             
+            // Get current gender filter
+            const selectedGender = document.getElementById('genderFilter').value;
+            
             // Group data by gender and age
             const dataByGender = {};
             norms.forEach(norm => {
-                const gender = norm.sex || 'unknown';
+                // Clean up gender value - handle null, undefined, or string "undefined"
+                let gender = norm.sex;
+                
+                
+                if (!gender || gender === 'undefined' || gender === 'null') {
+                    gender = 'unknown';
+                }
+                
+                // If a gender filter is selected, only include data for that gender
+                if (selectedGender && gender !== selectedGender) {
+                    return;
+                }
+                
                 if (!dataByGender[gender]) {
                     dataByGender[gender] = [];
                 }
@@ -329,6 +344,7 @@
                 dataByGender[gender].sort((a, b) => a.age - b.age);
             });
             
+            
             // Prepare chart data
             const datasets = [];
             const colors = {
@@ -340,11 +356,21 @@
             
             Object.keys(dataByGender).forEach(gender => {
                 const data = dataByGender[gender];
+                
+                // Skip if no data or if gender is still undefined/null
+                if (!data || data.length === 0 || !gender || gender === 'undefined' || gender === 'null') {
+                    return;
+                }
+                
                 const color = colors[gender] || colors['unknown'];
+                
+                // Clean up gender label to avoid "Undefined"
+                const genderLabel = (gender === 'unknown' || !gender) ? 'Unknown' : 
+                                   gender.charAt(0).toUpperCase() + gender.slice(1);
                 
                 // Add median line (p50)
                 datasets.push({
-                    label: `${gender.charAt(0).toUpperCase() + gender.slice(1)} (Median)`,
+                    label: `${genderLabel} (Median)`,
                     data: data.map(d => ({ x: d.age, y: d.p50 })),
                     borderColor: color,
                     backgroundColor: color + '20',
@@ -355,7 +381,7 @@
                 
                 // Add percentile ranges (p25-p75)
                 datasets.push({
-                    label: `${gender.charAt(0).toUpperCase() + gender.slice(1)} (25th-75th percentile)`,
+                    label: `${genderLabel} (25th-75th percentile)`,
                     data: data.map(d => ({ x: d.age, y: d.p75 })),
                     borderColor: color + '80',
                     backgroundColor: color + '10',
@@ -365,6 +391,7 @@
                 });
                 
                 datasets.push({
+                    label: `${genderLabel} (25th percentile)`,
                     data: data.map(d => ({ x: d.age, y: d.p25 })),
                     borderColor: color + '80',
                     backgroundColor: color + '10',
