@@ -809,6 +809,199 @@ html {
     background-color: #333941;
 }
 
+/* Health Metrics Page Styles */
+.health-metrics {
+    padding: 180px 0 80px; /* Account for dev banner and navbar */
+    min-height: 100vh;
+}
+
+.health-metrics-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    padding-top: 2rem;
+}
+
+.health-metrics-subtitle {
+    font-size: 1.3rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.metric-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(51, 57, 65, 0.1);
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.metric-title {
+    font-size: 1.4rem;
+    color: #333941;
+    margin: 0;
+    flex: 1;
+    line-height: 1.3;
+}
+
+.metric-unit {
+    background-color: #e8f4f8;
+    color: #2c5aa0;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid #d1e7dd;
+}
+
+.metric-content {
+    margin-bottom: 1.5rem;
+}
+
+.metric-description {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.metric-chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 1.5rem;
+    background-color: #fafafa;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.metric-chart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.metric-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 0.8rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.stat-value {
+    display: block;
+    font-size: 0.9rem;
+    color: #333941;
+    font-weight: 600;
+}
+
+.metric-source {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background-color: #f0f8ff;
+    border-radius: 10px;
+    border: 1px solid #d1e7dd;
+    border-left: 4px solid #2c5aa0;
+}
+
+.source-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.source-link {
+    color: #2c5aa0;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.source-link:hover {
+    color: #1e3a5f;
+    text-decoration: underline;
+}
+
+.metric-notes {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background-color: #fff8e1;
+    border-radius: 10px;
+    border: 1px solid #ffecb3;
+    border-left: 4px solid #ff9800;
+}
+
+.notes-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+.notes-text {
+    color: #333941;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    font-style: italic;
+}
+
+.no-data-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.no-data-message p {
+    color: #666;
+    margin: 0;
+    font-style: italic;
+}
+
 /* Responsive adjustments for protocols page */
 @media (max-width: 768px) {
     .protocols {
@@ -868,5 +1061,43 @@ html {
         padding: 0.7rem 0.8rem;
         font-size: 0.95rem;
         padding-right: 2.5rem;
+    }
+    
+    /* Health metrics responsive adjustments */
+    .health-metrics {
+        padding: 160px 0 80px;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .metric-card {
+        padding: 1.5rem;
+    }
+    
+    .metric-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .metric-title {
+        font-size: 1.2rem;
+    }
+    
+    .metric-chart-container {
+        height: 250px;
+        padding: 0.8rem;
+    }
+    
+    .metric-stats {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .stat-item {
+        padding: 0.6rem;
     }
 }
