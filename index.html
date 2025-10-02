@@ -29,7 +29,6 @@
                 <a href="#contact">Contact</a>
                 <a href="protocols.html">Protocols</a>
                 <a href="health-metrics.html">Health Metrics</a>
-                <a href="admin.html">Admin</a>
             </div>
         </div>
     </nav>
@@ -222,7 +221,7 @@
         
         // Update navigation for logged in user
         function updateNavForLoggedInUser() {
-            const adminLink = document.querySelector('a[href="admin.html"]');
+            const adminLink = document.querySelector('footer a[href="admin.html"]');
             if (adminLink) {
                 adminLink.textContent = 'Admin Dashboard';
                 adminLink.style.color = '#28a745';
@@ -261,7 +260,7 @@
                 updateNavForLoggedInUser();
             } else if (event === 'SIGNED_OUT') {
                 // Reset nav if needed
-                const adminLink = document.querySelector('a[href="admin.html"]');
+                const adminLink = document.querySelector('footer a[href="admin.html"]');
                 if (adminLink) {
                     adminLink.textContent = 'Admin';
                     adminLink.style.color = '';
