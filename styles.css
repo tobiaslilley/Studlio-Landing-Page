@@ -1499,7 +1499,7 @@ html {
 
 /* Admin Manager Sections */
 .admin-manager {
-    padding: 120px 0 80px;
+    padding: 180px 0 80px;
     background-color: #f8fafc;
     min-height: 100vh;
 }
@@ -1772,7 +1772,7 @@ html {
 /* Responsive Design for Admin Management */
 @media (max-width: 768px) {
     .admin-manager {
-        padding: 100px 0 60px;
+        padding: 160px 0 80px;
     }
     
     .manager-header {
