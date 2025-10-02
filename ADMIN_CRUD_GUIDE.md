@@ -126,11 +126,26 @@ I've successfully implemented full CRUD (Create, Read, Update, Delete) functiona
 - **"Form validation errors"**: Check that required fields are filled and data types are correct
 
 ### Database Permissions
-Make sure your Supabase RLS (Row Level Security) policies allow authenticated users to:
-- SELECT from protocols and health_metrics tables
-- INSERT into protocols and health_metrics tables  
-- UPDATE protocols and health_metrics tables
-- DELETE from protocols and health_metrics tables
+✅ **Secure RLS Policies Configured**: The RLS (Row Level Security) policies have been set up with **admin-only access**:
+
+**Read Access (Public)**:
+- Anyone can SELECT from protocols, health_metrics, health_categories, and health_metric_categories tables
+- This allows your iOS app users to read the data without authentication
+
+**Write Access (Admin Only)**:
+- Only the specific admin user (`tobylilley@gmail.com`) can INSERT, UPDATE, or DELETE
+- Your iOS app users **cannot** modify any admin data
+- Admin user ID: `12506cb4-95dc-4220-ae03-e17bfc9cd8f4`
+
+**Security**: This setup ensures that only you (as admin) can manage the content, while your iOS app users can read the data but cannot modify it.
+
+### Adding More Admin Users
+If you need to add more admin users in the future, you can:
+1. Create a new user in Supabase Auth
+2. Update the RLS policies to include the new user's UUID
+3. Or create a more flexible system using a dedicated admin table
+
+**Current Admin User**: `tobylilley@gmail.com` (ID: `12506cb4-95dc-4220-ae03-e17bfc9cd8f4`)
 
 ## Next Steps
 
