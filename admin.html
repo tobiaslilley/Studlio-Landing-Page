@@ -57,51 +57,21 @@
                     <div class="auth-form">
                         <div id="authError" class="auth-error" style="display: none;"></div>
                         
-                        <!-- Sign In Form -->
-                        <form id="signInForm" class="auth-form-content">
+                        <!-- Magic Link Form -->
+                        <form id="magicLinkForm" class="auth-form-content">
                             <div class="form-group">
                                 <label for="email">Email Address</label>
-                                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                                <input type="email" id="email" name="email" required placeholder="Enter your email" value="tobylilley@gmail.com">
                             </div>
                             
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" name="password" required placeholder="Enter your password">
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-full" id="signInBtn">
-                                <span class="btn-text">Sign In</span>
-                                <span class="btn-loading" style="display: none;">Signing in...</span>
+                            <button type="submit" class="btn btn-primary btn-full" id="magicLinkBtn">
+                                <span class="btn-text">Send Magic Link</span>
+                                <span class="btn-loading" style="display: none;">Sending...</span>
                             </button>
                         </form>
                         
-                        <!-- Sign Up Form (hidden by default) -->
-                        <form id="signUpForm" class="auth-form-content" style="display: none;">
-                            <div class="form-group">
-                                <label for="signupEmail">Email Address</label>
-                                <input type="email" id="signupEmail" name="email" required placeholder="Enter your email">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="signupPassword">Password</label>
-                                <input type="password" id="signupPassword" name="password" required placeholder="Create a password" minlength="6">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="confirmPassword">Confirm Password</label>
-                                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary btn-full" id="signUpBtn">
-                                <span class="btn-text">Create Account</span>
-                                <span class="btn-loading" style="display: none;">Creating account...</span>
-                            </button>
-                        </form>
-                        
-                        <div class="auth-switch">
-                            <p>Don't have an account? <a href="#" id="showSignUp">Sign up</a></p>
-                            <p id="showSignInText" style="display: none;">Already have an account? <a href="#" id="showSignIn">Sign in</a></p>
-                            <p style="margin-top: 1rem;"><a href="#" id="forgotPassword">Forgot your password?</a></p>
+                        <div class="auth-info">
+                            <p>We'll send you a secure link to sign in instantly - no password required!</p>
                         </div>
                     </div>
                 </div>
@@ -227,8 +197,7 @@
         // DOM elements
         const authSection = document.getElementById('authSection');
         const adminDashboard = document.getElementById('adminDashboard');
-        const signInForm = document.getElementById('signInForm');
-        const signUpForm = document.getElementById('signUpForm');
+        const magicLinkForm = document.getElementById('magicLinkForm');
         const authError = document.getElementById('authError');
         const adminLink = document.getElementById('adminLink');
         const signOutLink = document.getElementById('signOutLink');
@@ -276,32 +245,33 @@
             document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
         }
         
-        // Sign in form submission
-        signInForm.addEventListener('submit', async (e) => {
+        // Magic link form submission
+        magicLinkForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const signInBtn = document.getElementById('signInBtn');
-            const btnText = signInBtn.querySelector('.btn-text');
-            const btnLoading = signInBtn.querySelector('.btn-loading');
+            const magicLinkBtn = document.getElementById('magicLinkBtn');
+            const btnText = magicLinkBtn.querySelector('.btn-text');
+            const btnLoading = magicLinkBtn.querySelector('.btn-loading');
             
             // Show loading state
             btnText.style.display = 'none';
             btnLoading.style.display = 'inline';
-            signInBtn.disabled = true;
+            magicLinkBtn.disabled = true;
             hideError();
             
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
+                const { error } = await supabase.auth.signInWithOtp({
                     email: email,
-                    password: password
+                    options: {
+                        emailRedirectTo: window.location.origin + '/admin.html'
+                    }
                 });
                 
                 if (error) {
                     showError(error.message);
                 } else {
-                    showAdminDashboard(data.user);
+                    showSuccess('Magic link sent! Check your email and click the link to sign in.');
                 }
             } catch (error) {
                 showError('An unexpected error occurred. Please try again.');
@@ -309,55 +279,7 @@
                 // Reset button state
                 btnText.style.display = 'inline';
                 btnLoading.style.display = 'none';
-                signInBtn.disabled = false;
-            }
-        });
-        
-        // Sign up form submission
-        signUpForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const signUpBtn = document.getElementById('signUpBtn');
-            const btnText = signUpBtn.querySelector('.btn-text');
-            const btnLoading = signUpBtn.querySelector('.btn-loading');
-            
-            // Validate passwords match
-            if (password !== confirmPassword) {
-                showError('Passwords do not match');
-                return;
-            }
-            
-            // Show loading state
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline';
-            signUpBtn.disabled = true;
-            hideError();
-            
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password
-                });
-                
-                if (error) {
-                    showError(error.message);
-                } else {
-                    showSuccess('Account created successfully! Please check your email to verify your account.');
-                    // Switch back to sign in form
-                    setTimeout(() => {
-                        showSignInForm();
-                    }, 2000);
-                }
-            } catch (error) {
-                showError('An unexpected error occurred. Please try again.');
-            } finally {
-                // Reset button state
-                btnText.style.display = 'inline';
-                btnLoading.style.display = 'none';
-                signUpBtn.disabled = false;
+                magicLinkBtn.disabled = false;
             }
         });
         
@@ -373,54 +295,6 @@
             }
         });
         
-        // Toggle between sign in and sign up forms
-        document.getElementById('showSignUp').addEventListener('click', (e) => {
-            e.preventDefault();
-            showSignUpForm();
-        });
-        
-        document.getElementById('showSignIn').addEventListener('click', (e) => {
-            e.preventDefault();
-            showSignInForm();
-        });
-        
-        // Forgot password functionality
-        document.getElementById('forgotPassword').addEventListener('click', async (e) => {
-            e.preventDefault();
-            
-            const email = prompt('Enter your email address to reset your password:');
-            if (!email) return;
-            
-            try {
-                const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: window.location.origin + '/admin.html'
-                });
-                
-                if (error) {
-                    showError(error.message);
-                } else {
-                    showSuccess('Password reset email sent! Check your inbox.');
-                }
-            } catch (error) {
-                showError('An unexpected error occurred. Please try again.');
-            }
-        });
-        
-        function showSignInForm() {
-            signInForm.style.display = 'block';
-            signUpForm.style.display = 'none';
-            document.getElementById('showSignUp').parentElement.style.display = 'block';
-            document.getElementById('showSignInText').style.display = 'none';
-            hideError();
-        }
-        
-        function showSignUpForm() {
-            signInForm.style.display = 'none';
-            signUpForm.style.display = 'block';
-            document.getElementById('showSignUp').parentElement.style.display = 'none';
-            document.getElementById('showSignInText').style.display = 'block';
-            hideError();
-        }
         
         // Error handling
         function showError(message) {
