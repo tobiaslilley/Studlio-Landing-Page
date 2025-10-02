@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STUDL.IO Admin - Dashboard</title>
+    <meta name="description" content="STUDL.IO Admin Dashboard - Manage your biohacking protocols and health data.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="Assets/Website-Favicon-Color.svg">
+    
+    <!-- Preload fonts for better performance -->
+    <link rel="preload" href="Assets/Sanger.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="Assets/Cartograph-Sans-Light.ttf" as="font" type="font/ttf" crossorigin>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="nav-logo-img">
+            </div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="protocols.html">Protocols</a>
+                <a href="health-metrics.html">Health Metrics</a>
+                <a href="#" id="adminLink" style="display: none;">Admin</a>
+                <a href="#" id="signOutLink" style="display: none;">Sign Out</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Development Status Banner -->
+    <div class="dev-banner">
+        <div class="container">
+            <p>🔐 <strong>Admin Access</strong> STUDL.IO Admin Dashboard - Secure access required</p>
+        </div>
+    </div>
+
+    <!-- Authentication Section (shown when not logged in) -->
+    <section id="authSection" class="auth-section">
+        <div class="container">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <img src="Assets/Logo-Only-Transparent.png" alt="STUDL.IO" class="auth-logo">
+                        <h1 class="auth-title">Admin Access</h1>
+                        <p class="auth-subtitle">Sign in to access the STUDL.IO admin dashboard</p>
+                    </div>
+                    
+                    <div class="auth-form">
+                        <div id="authError" class="auth-error" style="display: none;"></div>
+                        
+                        <!-- Sign In Form -->
+                        <form id="signInForm" class="auth-form-content">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" name="password" required placeholder="Enter your password">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full" id="signInBtn">
+                                <span class="btn-text">Sign In</span>
+                                <span class="btn-loading" style="display: none;">Signing in...</span>
+                            </button>
+                        </form>
+                        
+                        <!-- Sign Up Form (hidden by default) -->
+                        <form id="signUpForm" class="auth-form-content" style="display: none;">
+                            <div class="form-group">
+                                <label for="signupEmail">Email Address</label>
+                                <input type="email" id="signupEmail" name="email" required placeholder="Enter your email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="signupPassword">Password</label>
+                                <input type="password" id="signupPassword" name="password" required placeholder="Create a password" minlength="6">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full" id="signUpBtn">
+                                <span class="btn-text">Create Account</span>
+                                <span class="btn-loading" style="display: none;">Creating account...</span>
+                            </button>
+                        </form>
+                        
+                        <div class="auth-switch">
+                            <p>Don't have an account? <a href="#" id="showSignUp">Sign up</a></p>
+                            <p id="showSignInText" style="display: none;">Already have an account? <a href="#" id="showSignIn">Sign in</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Dashboard (shown when logged in) -->
+    <section id="adminDashboard" class="admin-dashboard" style="display: none;">
+        <div class="container">
+            <div class="admin-header">
+                <h1 class="admin-title">Admin Dashboard</h1>
+                <p class="admin-subtitle">Welcome back! Manage your STUDL.IO content and settings.</p>
+            </div>
+            
+            <div class="admin-grid">
+                <!-- User Info Card -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>User Information</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="user-info">
+                            <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                            <p><strong>Last Sign In:</strong> <span id="lastSignIn"></span></p>
+                            <p><strong>Account Created:</strong> <span id="accountCreated"></span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions Card -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="quick-actions">
+                            <button class="btn btn-secondary btn-small" onclick="window.open('protocols.html', '_blank')">
+                                View Protocols
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="window.open('health-metrics.html', '_blank')">
+                                View Health Metrics
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="window.open('index.html', '_blank')">
+                                View Main Site
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Status Card -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>System Status</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="status-item">
+                            <span class="status-label">Database:</span>
+                            <span class="status-value status-healthy">Connected</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Authentication:</span>
+                            <span class="status-value status-healthy">Active</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Last Updated:</span>
+                            <span class="status-value" id="lastUpdated"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Admin Tools Card -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Admin Tools</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="admin-tools">
+                            <button class="btn btn-primary btn-small" onclick="refreshData()">
+                                Refresh Data
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="exportData()">
+                                Export Data
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="viewLogs()">
+                                View Logs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="footer-logo-img">
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="protocols.html">Protocols</a>
+                    <a href="health-metrics.html">Health Metrics</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 STUDL.IO. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://htizxlmrzfehvpupvwbn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // DOM elements
+        const authSection = document.getElementById('authSection');
+        const adminDashboard = document.getElementById('adminDashboard');
+        const signInForm = document.getElementById('signInForm');
+        const signUpForm = document.getElementById('signUpForm');
+        const authError = document.getElementById('authError');
+        const adminLink = document.getElementById('adminLink');
+        const signOutLink = document.getElementById('signOutLink');
+        
+        // Check authentication status on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuthStatus();
+        });
+        
+        // Check if user is authenticated
+        async function checkAuthStatus() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    showAdminDashboard(session.user);
+                } else {
+                    showAuthSection();
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+                showAuthSection();
+            }
+        }
+        
+        // Show authentication section
+        function showAuthSection() {
+            authSection.style.display = 'block';
+            adminDashboard.style.display = 'none';
+            adminLink.style.display = 'none';
+            signOutLink.style.display = 'none';
+        }
+        
+        // Show admin dashboard
+        function showAdminDashboard(user) {
+            authSection.style.display = 'none';
+            adminDashboard.style.display = 'block';
+            adminLink.style.display = 'inline';
+            signOutLink.style.display = 'inline';
+            
+            // Update user info
+            document.getElementById('userEmail').textContent = user.email;
+            document.getElementById('lastSignIn').textContent = new Date(user.last_sign_in_at).toLocaleString();
+            document.getElementById('accountCreated').textContent = new Date(user.created_at).toLocaleString();
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+        }
+        
+        // Sign in form submission
+        signInForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const signInBtn = document.getElementById('signInBtn');
+            const btnText = signInBtn.querySelector('.btn-text');
+            const btnLoading = signInBtn.querySelector('.btn-loading');
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            signInBtn.disabled = true;
+            hideError();
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    showError(error.message);
+                } else {
+                    showAdminDashboard(data.user);
+                }
+            } catch (error) {
+                showError('An unexpected error occurred. Please try again.');
+            } finally {
+                // Reset button state
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                signInBtn.disabled = false;
+            }
+        });
+        
+        // Sign up form submission
+        signUpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const signUpBtn = document.getElementById('signUpBtn');
+            const btnText = signUpBtn.querySelector('.btn-text');
+            const btnLoading = signUpBtn.querySelector('.btn-loading');
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            // Show loading state
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline';
+            signUpBtn.disabled = true;
+            hideError();
+            
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    showError(error.message);
+                } else {
+                    showSuccess('Account created successfully! Please check your email to verify your account.');
+                    // Switch back to sign in form
+                    setTimeout(() => {
+                        showSignInForm();
+                    }, 2000);
+                }
+            } catch (error) {
+                showError('An unexpected error occurred. Please try again.');
+            } finally {
+                // Reset button state
+                btnText.style.display = 'inline';
+                btnLoading.style.display = 'none';
+                signUpBtn.disabled = false;
+            }
+        });
+        
+        // Sign out functionality
+        signOutLink.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            try {
+                await supabase.auth.signOut();
+                showAuthSection();
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        });
+        
+        // Toggle between sign in and sign up forms
+        document.getElementById('showSignUp').addEventListener('click', (e) => {
+            e.preventDefault();
+            showSignUpForm();
+        });
+        
+        document.getElementById('showSignIn').addEventListener('click', (e) => {
+            e.preventDefault();
+            showSignInForm();
+        });
+        
+        function showSignInForm() {
+            signInForm.style.display = 'block';
+            signUpForm.style.display = 'none';
+            document.getElementById('showSignUp').parentElement.style.display = 'block';
+            document.getElementById('showSignInText').style.display = 'none';
+            hideError();
+        }
+        
+        function showSignUpForm() {
+            signInForm.style.display = 'none';
+            signUpForm.style.display = 'block';
+            document.getElementById('showSignUp').parentElement.style.display = 'none';
+            document.getElementById('showSignInText').style.display = 'block';
+            hideError();
+        }
+        
+        // Error handling
+        function showError(message) {
+            authError.textContent = message;
+            authError.style.display = 'block';
+        }
+        
+        function hideError() {
+            authError.style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            authError.textContent = message;
+            authError.className = 'auth-error auth-success';
+            authError.style.display = 'block';
+        }
+        
+        // Admin functions
+        function refreshData() {
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+            alert('Data refreshed successfully!');
+        }
+        
+        function exportData() {
+            alert('Export functionality coming soon!');
+        }
+        
+        function viewLogs() {
+            alert('Log viewer coming soon!');
+        }
+        
+        // Listen for auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                showAdminDashboard(session.user);
+            } else if (event === 'SIGNED_OUT') {
+                showAuthSection();
+            }
+        });
+    </script>
+</body>
+</html>

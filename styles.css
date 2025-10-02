@@ -1079,6 +1079,306 @@ html {
     font-style: italic;
 }
 
+/* Admin Page Styles */
+.auth-section {
+    padding: 180px 0 80px; /* Account for dev banner and navbar */
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    background-color: #fafafa;
+}
+
+.auth-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.auth-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(51, 57, 65, 0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.auth-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+.auth-title {
+    font-size: 2rem;
+    color: #333941;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 0;
+}
+
+.auth-form {
+    width: 100%;
+}
+
+.auth-form-content {
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333941;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'Cartograph', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #ffffff;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #333941;
+    box-shadow: 0 0 0 3px rgba(51, 57, 65, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-small {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+}
+
+.auth-error {
+    background-color: #fee;
+    color: #c33;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    border: 1px solid #fcc;
+    font-size: 0.95rem;
+}
+
+.auth-success {
+    background-color: #efe;
+    color: #363;
+    border-color: #cfc;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.auth-switch p {
+    margin: 0;
+    color: #666;
+    font-size: 1rem;
+}
+
+.auth-switch a {
+    color: #333941;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-switch a:hover {
+    color: #666;
+    text-decoration: underline;
+}
+
+/* Admin Dashboard Styles */
+.admin-dashboard {
+    padding: 180px 0 80px; /* Account for dev banner and navbar */
+    min-height: 100vh;
+    background-color: #fafafa;
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.admin-title {
+    font-size: 2.5rem;
+    color: #333941;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.admin-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(51, 57, 65, 0.1);
+}
+
+.admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.admin-card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(51, 57, 65, 0.1);
+}
+
+.admin-card-header h3 {
+    font-size: 1.3rem;
+    color: #333941;
+    margin: 0;
+}
+
+.admin-card-content {
+    color: #666;
+}
+
+.user-info p {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.user-info strong {
+    color: #333941;
+    font-weight: 600;
+}
+
+.quick-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(51, 57, 65, 0.05);
+}
+
+.status-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.status-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.status-value {
+    color: #333941;
+    font-weight: 600;
+}
+
+.status-healthy {
+    color: #28a745;
+}
+
+.admin-tools {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Responsive adjustments for admin page */
+@media (max-width: 768px) {
+    .auth-section {
+        padding: 160px 0 80px;
+    }
+    
+    .auth-card {
+        padding: 2rem;
+        margin: 0 1rem;
+    }
+    
+    .admin-dashboard {
+        padding: 160px 0 80px;
+    }
+    
+    .admin-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .admin-card {
+        padding: 1.5rem;
+    }
+    
+    .quick-actions,
+    .admin-tools {
+        gap: 0.6rem;
+    }
+    
+    .btn-small {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-title {
+        font-size: 1.5rem;
+    }
+    
+    .admin-title {
+        font-size: 2rem;
+    }
+    
+    .auth-card {
+        padding: 1.5rem;
+    }
+    
+    .form-group input {
+        padding: 0.8rem;
+    }
+}
+
 /* Responsive adjustments for protocols page */
 @media (max-width: 768px) {
     .protocols {
