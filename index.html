@@ -159,5 +159,116 @@
 
     <!-- Twitter Widget Script -->
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://htizxlmrzfehvpupvwbn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Handle magic link authentication on homepage
+        document.addEventListener('DOMContentLoaded', async () => {
+            await handleMagicLinkAuth();
+            await checkAuthStatus();
+        });
+        
+        // Handle magic link authentication
+        async function handleMagicLinkAuth() {
+            try {
+                // Check if there are auth parameters in the URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const accessToken = urlParams.get('access_token');
+                const refreshToken = urlParams.get('refresh_token');
+                const type = urlParams.get('type');
+                
+                if (accessToken && refreshToken && type === 'magiclink') {
+                    // Set the session with the tokens from the URL
+                    const { data, error } = await supabase.auth.setSession({
+                        access_token: accessToken,
+                        refresh_token: refreshToken
+                    });
+                    
+                    if (error) {
+                        console.error('Error setting session:', error);
+                    } else if (data.session) {
+                        // Clear the URL parameters
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        // Show success message
+                        showAuthMessage('Successfully signed in!', 'success');
+                    }
+                }
+            } catch (error) {
+                console.error('Error handling magic link auth:', error);
+            }
+        }
+        
+        // Check authentication status
+        async function checkAuthStatus() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    updateNavForLoggedInUser();
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+            }
+        }
+        
+        // Update navigation for logged in user
+        function updateNavForLoggedInUser() {
+            const adminLink = document.querySelector('a[href="admin.html"]');
+            if (adminLink) {
+                adminLink.textContent = 'Admin Dashboard';
+                adminLink.style.color = '#28a745';
+                adminLink.style.fontWeight = '600';
+            }
+        }
+        
+        // Show authentication message
+        function showAuthMessage(message, type) {
+            const banner = document.createElement('div');
+            banner.style.cssText = `
+                position: fixed;
+                top: 60px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: ${type === 'success' ? '#28a745' : '#dc3545'};
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 10px;
+                z-index: 1001;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            banner.textContent = message;
+            document.body.appendChild(banner);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                banner.remove();
+            }, 3000);
+        }
+        
+        // Listen for auth state changes
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                updateNavForLoggedInUser();
+            } else if (event === 'SIGNED_OUT') {
+                // Reset nav if needed
+                const adminLink = document.querySelector('a[href="admin.html"]');
+                if (adminLink) {
+                    adminLink.textContent = 'Admin';
+                    adminLink.style.color = '';
+                    adminLink.style.fontWeight = '';
+                }
+            }
+        });
+    </script>
 </body>
 </html>

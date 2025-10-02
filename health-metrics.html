@@ -21,6 +21,41 @@
     
     <!-- Supabase -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://htizxlmrzfehvpupvwbn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Check authentication status
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuthStatus();
+        });
+        
+        async function checkAuthStatus() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    updateNavForLoggedInUser();
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+            }
+        }
+        
+        function updateNavForLoggedInUser() {
+            const adminLink = document.querySelector('a[href="admin.html"]');
+            if (adminLink) {
+                adminLink.textContent = 'Admin Dashboard';
+                adminLink.style.color = '#28a745';
+                adminLink.style.fontWeight = '600';
+            }
+        }
+    </script>
 </head>
 <body>
     <!-- Navigation -->
