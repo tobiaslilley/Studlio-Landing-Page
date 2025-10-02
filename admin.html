@@ -143,6 +143,40 @@
                     </div>
                 </div>
                 
+                <!-- Protocols Management Card -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Protocols Management</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="admin-tools">
+                            <button class="btn btn-primary btn-small" onclick="showProtocolsManager()">
+                                Manage Protocols
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="addNewProtocol()">
+                                Add New Protocol
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Health Metrics Management Card -->
+                <div class="admin-card">
+                    <div class="admin-card-header">
+                        <h3>Health Metrics Management</h3>
+                    </div>
+                    <div class="admin-card-content">
+                        <div class="admin-tools">
+                            <button class="btn btn-primary btn-small" onclick="showMetricsManager()">
+                                Manage Health Metrics
+                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="addNewMetric()">
+                                Add New Metric
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Admin Tools Card -->
                 <div class="admin-card">
                     <div class="admin-card-header">
@@ -165,6 +199,190 @@
             </div>
         </div>
     </section>
+
+    <!-- Protocols Management Section -->
+    <section id="protocolsManager" class="admin-manager" style="display: none;">
+        <div class="container">
+            <div class="manager-header">
+                <h2>Protocols Management</h2>
+                <button class="btn btn-secondary" onclick="hideProtocolsManager()">← Back to Dashboard</button>
+            </div>
+            
+            <div class="manager-actions">
+                <button class="btn btn-primary" onclick="addNewProtocol()">Add New Protocol</button>
+                <div class="search-container">
+                    <input type="text" id="protocolSearch" placeholder="Search protocols..." class="search-input">
+                </div>
+            </div>
+            
+            <div id="protocolsList" class="manager-list">
+                <!-- Protocols will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Health Metrics Management Section -->
+    <section id="metricsManager" class="admin-manager" style="display: none;">
+        <div class="container">
+            <div class="manager-header">
+                <h2>Health Metrics Management</h2>
+                <button class="btn btn-secondary" onclick="hideMetricsManager()">← Back to Dashboard</button>
+            </div>
+            
+            <div class="manager-actions">
+                <button class="btn btn-primary" onclick="addNewMetric()">Add New Metric</button>
+                <div class="search-container">
+                    <input type="text" id="metricSearch" placeholder="Search metrics..." class="search-input">
+                </div>
+            </div>
+            
+            <div id="metricsList" class="manager-list">
+                <!-- Metrics will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Protocol Form Modal -->
+    <div id="protocolModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="protocolModalTitle">Add New Protocol</h3>
+                <button class="modal-close" onclick="closeProtocolModal()">&times;</button>
+            </div>
+            <form id="protocolForm" class="modal-form">
+                <input type="hidden" id="protocolId" name="id">
+                
+                <div class="form-group">
+                    <label for="protocolName">Name *</label>
+                    <input type="text" id="protocolName" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="protocolCategory">Category *</label>
+                    <select id="protocolCategory" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Diet">Diet</option>
+                        <option value="Exercise">Exercise</option>
+                        <option value="Sleep">Sleep</option>
+                        <option value="Supplement">Supplement</option>
+                        <option value="Environment">Environment</option>
+                        <option value="Mental Health">Mental Health</option>
+                        <option value="General">General</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="protocolDescription">Description</label>
+                    <textarea id="protocolDescription" name="description" rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="protocolUnit">Unit</label>
+                    <input type="text" id="protocolUnit" name="unit" placeholder="e.g., mg, days, hours">
+                </div>
+                
+                <div class="form-group">
+                    <label for="protocolDefaultValue">Default Value</label>
+                    <input type="number" id="protocolDefaultValue" name="default_value" step="0.01">
+                </div>
+                
+                <div class="form-group">
+                    <label for="protocolMetricIds">Related Health Metrics</label>
+                    <select id="protocolMetricIds" name="metric_ids" multiple>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                    <small>Hold Ctrl/Cmd to select multiple metrics</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="protocolIsDefault" name="is_default">
+                        Set as default protocol
+                    </label>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeProtocolModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Protocol</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Health Metric Form Modal -->
+    <div id="metricModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="metricModalTitle">Add New Health Metric</h3>
+                <button class="modal-close" onclick="closeMetricModal()">&times;</button>
+            </div>
+            <form id="metricForm" class="modal-form">
+                <input type="hidden" id="metricId" name="id">
+                
+                <div class="form-group">
+                    <label for="metricName">Name *</label>
+                    <input type="text" id="metricName" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="metricIdentifier">HealthKit Identifier *</label>
+                    <input type="text" id="metricIdentifier" name="identifier" required placeholder="e.g., HKQuantityTypeIdentifierStepCount">
+                </div>
+                
+                <div class="form-group">
+                    <label for="metricUnit">Unit *</label>
+                    <input type="text" id="metricUnit" name="unit" required placeholder="e.g., count, kcal, mg/dL">
+                </div>
+                
+                <div class="form-group">
+                    <label for="metricKind">Kind</label>
+                    <select id="metricKind" name="kind">
+                        <option value="quantity">Quantity</option>
+                        <option value="category">Category</option>
+                        <option value="correlation">Correlation</option>
+                        <option value="workout">Workout</option>
+                        <option value="series">Series</option>
+                        <option value="electrocardiogram">Electrocardiogram</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="metricPreferredStats">Preferred Stats</label>
+                    <select id="metricPreferredStats" name="preferred_stats" multiple>
+                        <option value="sum">Sum</option>
+                        <option value="avg">Average</option>
+                        <option value="min">Minimum</option>
+                        <option value="max">Maximum</option>
+                        <option value="most_recent">Most Recent</option>
+                        <option value="duration_sum">Duration Sum</option>
+                        <option value="count">Count</option>
+                        <option value="distance_sum">Distance Sum</option>
+                        <option value="energy_sum">Energy Sum</option>
+                    </select>
+                    <small>Hold Ctrl/Cmd to select multiple stats</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="metricUnitInternal">Internal Unit</label>
+                    <input type="text" id="metricUnitInternal" name="unit_internal" placeholder="Internal unit for calculations">
+                </div>
+                
+                <div class="form-group">
+                    <label for="metricUnitDisplayStrategy">Unit Display Strategy</label>
+                    <select id="metricUnitDisplayStrategy" name="unit_display_strategy">
+                        <option value="by_locale">By Locale</option>
+                        <option value="fixed">Fixed</option>
+                        <option value="from_device">From Device</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeMetricModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Metric</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -333,6 +551,423 @@
             } else if (event === 'SIGNED_OUT') {
                 showAuthSection();
             }
+        });
+
+        // Global variables for CRUD operations
+        let allProtocols = [];
+        let allHealthMetrics = [];
+
+        // ===== PROTOCOLS MANAGEMENT =====
+        
+        // Show protocols manager
+        function showProtocolsManager() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('protocolsManager').style.display = 'block';
+            loadProtocolsForManagement();
+        }
+
+        // Hide protocols manager
+        function hideProtocolsManager() {
+            document.getElementById('protocolsManager').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+        }
+
+        // Load protocols for management
+        async function loadProtocolsForManagement() {
+            try {
+                const { data: protocols, error } = await supabase
+                    .from('protocols')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allProtocols = protocols || [];
+                displayProtocolsForManagement(allProtocols);
+            } catch (error) {
+                console.error('Error loading protocols:', error);
+                alert('Error loading protocols: ' + error.message);
+            }
+        }
+
+        // Display protocols in management view
+        function displayProtocolsForManagement(protocols) {
+            const protocolsList = document.getElementById('protocolsList');
+            
+            if (!protocols || protocols.length === 0) {
+                protocolsList.innerHTML = '<p class="no-data">No protocols found.</p>';
+                return;
+            }
+
+            protocolsList.innerHTML = protocols.map(protocol => `
+                <div class="manager-item">
+                    <div class="item-content">
+                        <h4>${escapeHtml(protocol.name || 'Untitled Protocol')}</h4>
+                        <p class="item-meta">
+                            <span class="category">${escapeHtml(protocol.category || 'General')}</span>
+                            ${protocol.unit && protocol.unit !== '—' ? `<span class="unit">${escapeHtml(protocol.unit)}</span>` : ''}
+                            ${protocol.is_default ? '<span class="badge">Default</span>' : ''}
+                        </p>
+                        <p class="item-description">${escapeHtml(protocol.description || 'No description')}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-small btn-secondary" onclick="editProtocol('${protocol.id}')">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteProtocol('${protocol.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add new protocol
+        function addNewProtocol() {
+            document.getElementById('protocolModalTitle').textContent = 'Add New Protocol';
+            document.getElementById('protocolForm').reset();
+            document.getElementById('protocolId').value = '';
+            populateHealthMetricsDropdown();
+            document.getElementById('protocolModal').style.display = 'block';
+        }
+
+        // Edit protocol
+        async function editProtocol(protocolId) {
+            try {
+                const { data: protocol, error } = await supabase
+                    .from('protocols')
+                    .select('*')
+                    .eq('id', protocolId)
+                    .single();
+
+                if (error) throw error;
+
+                // Populate form
+                document.getElementById('protocolModalTitle').textContent = 'Edit Protocol';
+                document.getElementById('protocolId').value = protocol.id;
+                document.getElementById('protocolName').value = protocol.name || '';
+                document.getElementById('protocolCategory').value = protocol.category || '';
+                document.getElementById('protocolDescription').value = protocol.description || '';
+                document.getElementById('protocolUnit').value = protocol.unit || '';
+                document.getElementById('protocolDefaultValue').value = protocol.default_value || '';
+                document.getElementById('protocolIsDefault').checked = protocol.is_default || false;
+
+                // Populate health metrics dropdown and select current ones
+                await populateHealthMetricsDropdown();
+                const metricSelect = document.getElementById('protocolMetricIds');
+                if (protocol.metric_ids && protocol.metric_ids.length > 0) {
+                    Array.from(metricSelect.options).forEach(option => {
+                        option.selected = protocol.metric_ids.includes(option.value);
+                    });
+                }
+
+                document.getElementById('protocolModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading protocol:', error);
+                alert('Error loading protocol: ' + error.message);
+            }
+        }
+
+        // Delete protocol
+        async function deleteProtocol(protocolId) {
+            if (!confirm('Are you sure you want to delete this protocol? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('protocols')
+                    .delete()
+                    .eq('id', protocolId);
+
+                if (error) throw error;
+
+                alert('Protocol deleted successfully!');
+                loadProtocolsForManagement();
+            } catch (error) {
+                console.error('Error deleting protocol:', error);
+                alert('Error deleting protocol: ' + error.message);
+            }
+        }
+
+        // Populate health metrics dropdown
+        async function populateHealthMetricsDropdown() {
+            try {
+                const { data: metrics, error } = await supabase
+                    .from('health_metrics')
+                    .select('id, name, unit')
+                    .order('name');
+
+                if (error) throw error;
+
+                const select = document.getElementById('protocolMetricIds');
+                select.innerHTML = '';
+
+                if (metrics && metrics.length > 0) {
+                    metrics.forEach(metric => {
+                        const option = document.createElement('option');
+                        option.value = metric.id;
+                        option.textContent = `${metric.name} (${metric.unit || 'no unit'})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading health metrics:', error);
+            }
+        }
+
+        // Close protocol modal
+        function closeProtocolModal() {
+            document.getElementById('protocolModal').style.display = 'none';
+        }
+
+        // Handle protocol form submission
+        document.getElementById('protocolForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const protocolData = {
+                name: formData.get('name'),
+                category: formData.get('category'),
+                description: formData.get('description'),
+                unit: formData.get('unit'),
+                default_value: formData.get('default_value') ? parseFloat(formData.get('default_value')) : null,
+                is_default: formData.get('is_default') === 'on',
+                metric_ids: Array.from(document.getElementById('protocolMetricIds').selectedOptions).map(option => option.value)
+            };
+
+            const protocolId = formData.get('id');
+
+            try {
+                if (protocolId) {
+                    // Update existing protocol
+                    const { error } = await supabase
+                        .from('protocols')
+                        .update(protocolData)
+                        .eq('id', protocolId);
+
+                    if (error) throw error;
+                    alert('Protocol updated successfully!');
+                } else {
+                    // Create new protocol
+                    const { error } = await supabase
+                        .from('protocols')
+                        .insert(protocolData);
+
+                    if (error) throw error;
+                    alert('Protocol created successfully!');
+                }
+
+                closeProtocolModal();
+                loadProtocolsForManagement();
+            } catch (error) {
+                console.error('Error saving protocol:', error);
+                alert('Error saving protocol: ' + error.message);
+            }
+        });
+
+        // ===== HEALTH METRICS MANAGEMENT =====
+
+        // Show metrics manager
+        function showMetricsManager() {
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('metricsManager').style.display = 'block';
+            loadHealthMetricsForManagement();
+        }
+
+        // Hide metrics manager
+        function hideMetricsManager() {
+            document.getElementById('metricsManager').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+        }
+
+        // Load health metrics for management
+        async function loadHealthMetricsForManagement() {
+            try {
+                const { data: metrics, error } = await supabase
+                    .from('health_metrics')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allHealthMetrics = metrics || [];
+                displayHealthMetricsForManagement(allHealthMetrics);
+            } catch (error) {
+                console.error('Error loading health metrics:', error);
+                alert('Error loading health metrics: ' + error.message);
+            }
+        }
+
+        // Display health metrics in management view
+        function displayHealthMetricsForManagement(metrics) {
+            const metricsList = document.getElementById('metricsList');
+            
+            if (!metrics || metrics.length === 0) {
+                metricsList.innerHTML = '<p class="no-data">No health metrics found.</p>';
+                return;
+            }
+
+            metricsList.innerHTML = metrics.map(metric => `
+                <div class="manager-item">
+                    <div class="item-content">
+                        <h4>${escapeHtml(metric.name || 'Untitled Metric')}</h4>
+                        <p class="item-meta">
+                            <span class="identifier">${escapeHtml(metric.identifier || 'No identifier')}</span>
+                            <span class="unit">${escapeHtml(metric.unit || 'No unit')}</span>
+                            <span class="kind">${escapeHtml(metric.kind || 'quantity')}</span>
+                        </p>
+                        <p class="item-description">${escapeHtml(metric.identifier || 'HealthKit metric')}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-small btn-secondary" onclick="editMetric('${metric.id}')">Edit</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteMetric('${metric.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add new metric
+        function addNewMetric() {
+            document.getElementById('metricModalTitle').textContent = 'Add New Health Metric';
+            document.getElementById('metricForm').reset();
+            document.getElementById('metricId').value = '';
+            document.getElementById('metricModal').style.display = 'block';
+        }
+
+        // Edit metric
+        async function editMetric(metricId) {
+            try {
+                const { data: metric, error } = await supabase
+                    .from('health_metrics')
+                    .select('*')
+                    .eq('id', metricId)
+                    .single();
+
+                if (error) throw error;
+
+                // Populate form
+                document.getElementById('metricModalTitle').textContent = 'Edit Health Metric';
+                document.getElementById('metricId').value = metric.id;
+                document.getElementById('metricName').value = metric.name || '';
+                document.getElementById('metricIdentifier').value = metric.identifier || '';
+                document.getElementById('metricUnit').value = metric.unit || '';
+                document.getElementById('metricKind').value = metric.kind || 'quantity';
+                document.getElementById('metricUnitInternal').value = metric.unit_internal || '';
+                document.getElementById('metricUnitDisplayStrategy').value = metric.unit_display_strategy || 'by_locale';
+
+                // Handle preferred stats (array)
+                const preferredStatsSelect = document.getElementById('metricPreferredStats');
+                if (metric.preferred_stats && metric.preferred_stats.length > 0) {
+                    Array.from(preferredStatsSelect.options).forEach(option => {
+                        option.selected = metric.preferred_stats.includes(option.value);
+                    });
+                }
+
+                document.getElementById('metricModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading metric:', error);
+                alert('Error loading metric: ' + error.message);
+            }
+        }
+
+        // Delete metric
+        async function deleteMetric(metricId) {
+            if (!confirm('Are you sure you want to delete this health metric? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('health_metrics')
+                    .delete()
+                    .eq('id', metricId);
+
+                if (error) throw error;
+
+                alert('Health metric deleted successfully!');
+                loadHealthMetricsForManagement();
+            } catch (error) {
+                console.error('Error deleting metric:', error);
+                alert('Error deleting metric: ' + error.message);
+            }
+        }
+
+        // Close metric modal
+        function closeMetricModal() {
+            document.getElementById('metricModal').style.display = 'none';
+        }
+
+        // Handle metric form submission
+        document.getElementById('metricForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            const metricData = {
+                name: formData.get('name'),
+                identifier: formData.get('identifier'),
+                unit: formData.get('unit'),
+                kind: formData.get('kind'),
+                unit_internal: formData.get('unit_internal'),
+                unit_display_strategy: formData.get('unit_display_strategy'),
+                preferred_stats: Array.from(document.getElementById('metricPreferredStats').selectedOptions).map(option => option.value)
+            };
+
+            const metricId = formData.get('id');
+
+            try {
+                if (metricId) {
+                    // Update existing metric
+                    const { error } = await supabase
+                        .from('health_metrics')
+                        .update(metricData)
+                        .eq('id', metricId);
+
+                    if (error) throw error;
+                    alert('Health metric updated successfully!');
+                } else {
+                    // Create new metric
+                    const { error } = await supabase
+                        .from('health_metrics')
+                        .insert(metricData);
+
+                    if (error) throw error;
+                    alert('Health metric created successfully!');
+                }
+
+                closeMetricModal();
+                loadHealthMetricsForManagement();
+            } catch (error) {
+                console.error('Error saving metric:', error);
+                alert('Error saving metric: ' + error.message);
+            }
+        });
+
+        // ===== UTILITY FUNCTIONS =====
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Search functionality for protocols
+        document.getElementById('protocolSearch').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredProtocols = allProtocols.filter(protocol => 
+                protocol.name.toLowerCase().includes(searchTerm) ||
+                protocol.category.toLowerCase().includes(searchTerm) ||
+                (protocol.description && protocol.description.toLowerCase().includes(searchTerm))
+            );
+            displayProtocolsForManagement(filteredProtocols);
+        });
+
+        // Search functionality for metrics
+        document.getElementById('metricSearch').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredMetrics = allHealthMetrics.filter(metric => 
+                metric.name.toLowerCase().includes(searchTerm) ||
+                metric.identifier.toLowerCase().includes(searchTerm) ||
+                (metric.unit && metric.unit.toLowerCase().includes(searchTerm))
+            );
+            displayHealthMetricsForManagement(filteredMetrics);
         });
     </script>
 </body>
