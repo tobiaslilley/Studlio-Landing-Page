@@ -18,6 +18,7 @@ I've successfully implemented full CRUD (Create, Read, Update, Delete) functiona
 - **Edit existing metrics** with all configuration options
 - **Delete metrics** with confirmation
 - **Configure metric properties** (kind, preferred stats, units, etc.)
+- **Assign health categories** using the existing category system
 
 ## Database Structure Understanding
 
@@ -107,13 +108,15 @@ I've successfully implemented full CRUD (Create, Read, Update, Delete) functiona
 - **Preferred Stats**: How to aggregate the data (sum, average, etc.)
 - **Internal Unit**: Unit used for calculations
 - **Unit Display Strategy**: How to show units to users
+- **Health Categories**: Multi-select from existing categories (Cardiovascular, Metabolic, etc.)
 
 ## Best Practices
 
 1. **Protocols**: Always link protocols to relevant health metrics for better tracking
 2. **Health Metrics**: Use proper HealthKit identifiers for iOS integration
 3. **Categories**: Use consistent category names across protocols
-4. **Units**: Be consistent with unit naming (e.g., always use "mg" not "milligrams")
+4. **Health Categories**: Assign metrics to appropriate health categories for better organization
+5. **Units**: Be consistent with unit naming (e.g., always use "mg" not "milligrams")
 
 ## Troubleshooting
 
