@@ -196,7 +196,7 @@
                 const { data: protocols, error: protocolsError } = await supabase
                     .from('protocols')
                     .select('*')
-                    .order('featured', { ascending: false })
+                    .order('featured', { ascending: false, nullsFirst: false })
                     .order('created_at', { ascending: false });
                 
                 if (protocolsError) {
@@ -227,6 +227,9 @@
                 allProtocols = protocols || [];
                 allMetricsMap = metricsMap;
                 
+                // Debug: Log featured protocols
+                console.log('Featured protocols:', protocols.filter(p => p.featured === true).map(p => p.name));
+                
                 // Hide loading state
                 loadingEl.style.display = 'none';
                 
@@ -234,6 +237,16 @@
                     // Show empty state
                     emptyStateEl.style.display = 'block';
                 } else {
+                    // Sort protocols: featured first, then by creation date
+                    protocols.sort((a, b) => {
+                        // First sort by featured status (true first, nulls last)
+                        if (a.featured === true && b.featured !== true) return -1;
+                        if (a.featured !== true && b.featured === true) return 1;
+                        
+                        // Then sort by creation date (newest first)
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    });
+                    
                     // Populate category dropdown
                     populateCategoryDropdown(protocols);
                     
@@ -444,9 +457,14 @@
             
             // Sort filtered protocols: featured first, then by creation date
             filteredProtocols.sort((a, b) => {
-                // First sort by featured status (true first)
-                if (a.featured && !b.featured) return -1;
-                if (!a.featured && b.featured) return 1;
+                // Debug logging
+                if (a.featured === true || b.featured === true) {
+                    console.log(`Sorting: ${a.name} (featured: ${a.featured}) vs ${b.name} (featured: ${b.featured})`);
+                }
+                
+                // First sort by featured status (true first, nulls last)
+                if (a.featured === true && b.featured !== true) return -1;
+                if (a.featured !== true && b.featured === true) return 1;
                 
                 // Then sort by creation date (newest first)
                 return new Date(b.created_at) - new Date(a.created_at);
