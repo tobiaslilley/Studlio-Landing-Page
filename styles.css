@@ -727,6 +727,60 @@ html {
     hyphens: auto;
 }
 
+/* Citations Styles */
+.protocol-citations {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #007bff;
+}
+
+.citations-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.75rem;
+    font-family: 'Cartograph', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.citations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.citation-item {
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.citation-item:before {
+    content: "•";
+    color: #007bff;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.citation-item:last-child {
+    margin-bottom: 0;
+}
+
+.citation-link {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    transition: color 0.2s ease;
+}
+
+.citation-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
 .protocol-detail {
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
