@@ -196,6 +196,7 @@
                 const { data: protocols, error: protocolsError } = await supabase
                     .from('protocols')
                     .select('*')
+                    .order('featured', { ascending: false })
                     .order('created_at', { ascending: false });
                 
                 if (protocolsError) {
@@ -286,9 +287,12 @@
                 }
                 
                 return `
-                <div class="protocol-card">
+                <div class="protocol-card ${protocol.featured ? 'featured-protocol' : ''}">
                     <div class="protocol-header">
-                        <h3 class="protocol-title">${convertUrlsToLinks(escapeHtml(protocol.name || 'Untitled Protocol'))}</h3>
+                        <div class="protocol-title-row">
+                            <h3 class="protocol-title">${convertUrlsToLinks(escapeHtml(protocol.name || 'Untitled Protocol'))}</h3>
+                            ${protocol.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
+                        </div>
                         <div class="protocol-category">${convertUrlsToLinks(escapeHtml(protocol.category || 'General'))}</div>
                     </div>
                     <div class="protocol-content">
@@ -437,6 +441,16 @@
                     return false;
                 });
             }
+            
+            // Sort filtered protocols: featured first, then by creation date
+            filteredProtocols.sort((a, b) => {
+                // First sort by featured status (true first)
+                if (a.featured && !b.featured) return -1;
+                if (!a.featured && b.featured) return 1;
+                
+                // Then sort by creation date (newest first)
+                return new Date(b.created_at) - new Date(a.created_at);
+            });
             
             // Update display
             if (filteredProtocols.length === 0) {

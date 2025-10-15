@@ -687,6 +687,45 @@ html {
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
 }
 
+/* Featured Protocol Styles */
+.featured-protocol {
+    border: 2px solid #ffd700;
+    background: linear-gradient(135deg, #fff9e6 0%, #ffffff 100%);
+    position: relative;
+}
+
+.featured-protocol::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+    border-radius: 22px;
+    z-index: -1;
+}
+
+.protocol-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.featured-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #8b6914;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
 .protocol-header {
     display: flex;
     justify-content: space-between;
@@ -1482,6 +1521,16 @@ html {
     
     .protocol-card {
         padding: 1.5rem;
+    }
+    
+    .protocol-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .featured-badge {
+        align-self: flex-start;
     }
     
     .protocol-header {
