@@ -269,13 +269,13 @@
                 return `
                 <div class="protocol-card">
                     <div class="protocol-header">
-                        <h3 class="protocol-title">${escapeHtml(protocol.name || 'Untitled Protocol')}</h3>
-                        <div class="protocol-category">${escapeHtml(protocol.category || 'General')}</div>
+                        <h3 class="protocol-title">${convertUrlsToLinks(escapeHtml(protocol.name || 'Untitled Protocol'))}</h3>
+                        <div class="protocol-category">${convertUrlsToLinks(escapeHtml(protocol.category || 'General'))}</div>
                     </div>
                     <div class="protocol-content">
-                        <p class="protocol-description">${escapeHtml(protocol.description || 'No description available.')}</p>
-                        ${protocol.unit && protocol.unit !== '—' ? `<div class="protocol-detail"><strong>Unit:</strong> ${escapeHtml(protocol.unit)}</div>` : ''}
-                        ${protocol.default_value ? `<div class="protocol-detail"><strong>Default Value:</strong> ${escapeHtml(protocol.default_value)}</div>` : ''}
+                        <p class="protocol-description">${convertUrlsToLinks(escapeHtml(protocol.description || 'No description available.'))}</p>
+                        ${protocol.unit && protocol.unit !== '—' ? `<div class="protocol-detail"><strong>Unit:</strong> ${convertUrlsToLinks(escapeHtml(protocol.unit))}</div>` : ''}
+                        ${protocol.default_value ? `<div class="protocol-detail"><strong>Default Value:</strong> ${convertUrlsToLinks(escapeHtml(protocol.default_value))}</div>` : ''}
                         ${metricNames.length > 0 ? `
                             <div class="protocol-detail">
                                 <strong>Tracked Metrics:</strong>
@@ -300,6 +300,36 @@
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
+        }
+        
+        // Helper function to convert URLs to clickable links with shortened text
+        function convertUrlsToLinks(text) {
+            if (!text) return text;
+            
+            // URL regex pattern - matches http/https URLs
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            
+            return text.replace(urlRegex, (url) => {
+                // Create a shortened display text
+                let displayText = url;
+                
+                // Remove protocol for display
+                if (url.startsWith('https://')) {
+                    displayText = url.substring(8);
+                } else if (url.startsWith('http://')) {
+                    displayText = url.substring(7);
+                }
+                
+                // Truncate if too long (keep first part and last part)
+                if (displayText.length > 50) {
+                    const firstPart = displayText.substring(0, 30);
+                    const lastPart = displayText.substring(displayText.length - 20);
+                    displayText = firstPart + '...' + lastPart;
+                }
+                
+                // Return clickable link
+                return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="protocol-link">${escapeHtml(displayText)}</a>`;
+            });
         }
         
         // Helper function to format date

@@ -678,6 +678,8 @@ html {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(51, 57, 65, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .protocol-card:hover {
@@ -720,17 +722,35 @@ html {
     line-height: 1.6;
     margin-bottom: 1rem;
     font-size: 1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .protocol-detail {
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
     color: #555;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .protocol-detail strong {
     color: #333941;
     font-weight: 600;
+}
+
+.protocol-link {
+    color: #007bff;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s ease;
+    word-break: break-all;
+}
+
+.protocol-link:hover {
+    border-bottom-color: #007bff;
+    text-decoration: none;
 }
 
 .protocol-footer {
