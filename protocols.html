@@ -244,15 +244,15 @@
                     emptyStateEl.style.display = 'block';
                 } else {
                     // Sort protocols using the current sort option
-                    protocols = sortProtocols(protocols);
+                    const sortedProtocols = sortProtocols([...protocols]);
                     
                     // Populate category dropdown
-                    populateCategoryDropdown(protocols);
+                    populateCategoryDropdown(sortedProtocols);
                     
                     // Display protocols with metric information
-                    displayProtocols(protocols, metricsMap);
+                    displayProtocols(sortedProtocols, metricsMap);
                     protocolsGridEl.style.display = 'grid';
-                    updateSearchResults(protocols.length, protocols.length);
+                    updateSearchResults(sortedProtocols.length, sortedProtocols.length);
                 }
                 
             } catch (error) {
