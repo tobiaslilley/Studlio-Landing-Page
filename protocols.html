@@ -99,10 +99,17 @@
                         <div class="search-icon">🔍</div>
                     </div>
                     
-                    <!-- Category Filter -->
+                    <!-- Filters -->
                     <div class="filter-container">
                         <select id="categoryFilter" class="category-dropdown">
                             <option value="">All Categories</option>
+                        </select>
+                        <select id="sortFilter" class="category-dropdown">
+                            <option value="featured-date">Featured & Date</option>
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="date-desc">Date (Newest)</option>
+                            <option value="date-asc">Date (Oldest)</option>
                         </select>
                     </div>
                     
@@ -236,15 +243,8 @@
                     // Show empty state
                     emptyStateEl.style.display = 'block';
                 } else {
-                    // Sort protocols: featured first, then by creation date
-                    protocols.sort((a, b) => {
-                        // First sort by featured status (true first, nulls last)
-                        if (a.featured === true && b.featured !== true) return -1;
-                        if (a.featured !== true && b.featured === true) return 1;
-                        
-                        // Then sort by creation date (newest first)
-                        return new Date(b.created_at) - new Date(a.created_at);
-                    });
+                    // Sort protocols using the current sort option
+                    protocols = sortProtocols(protocols);
                     
                     // Populate category dropdown
                     populateCategoryDropdown(protocols);
@@ -396,6 +396,43 @@
             });
         }
         
+        // Sort protocols based on selected sort option
+        function sortProtocols(protocols) {
+            const sortOption = document.getElementById('sortFilter').value;
+            
+            return protocols.sort((a, b) => {
+                switch (sortOption) {
+                    case 'featured-date':
+                        // Default: Featured first, then by creation date (newest first)
+                        if (a.featured === true && b.featured !== true) return -1;
+                        if (a.featured !== true && b.featured === true) return 1;
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    
+                    case 'name-asc':
+                        // Sort by name A-Z
+                        return (a.name || '').localeCompare(b.name || '');
+                    
+                    case 'name-desc':
+                        // Sort by name Z-A
+                        return (b.name || '').localeCompare(a.name || '');
+                    
+                    case 'date-desc':
+                        // Sort by date newest first
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    
+                    case 'date-asc':
+                        // Sort by date oldest first
+                        return new Date(a.created_at) - new Date(b.created_at);
+                    
+                    default:
+                        // Default sorting
+                        if (a.featured === true && b.featured !== true) return -1;
+                        if (a.featured !== true && b.featured === true) return 1;
+                        return new Date(b.created_at) - new Date(a.created_at);
+                }
+            });
+        }
+        
         // Combined search and filter functionality
         function filterProtocols() {
             const searchTerm = document.getElementById('searchInput').value;
@@ -454,20 +491,8 @@
                 });
             }
             
-            // Sort filtered protocols: featured first, then by creation date
-            filteredProtocols.sort((a, b) => {
-                // Debug logging
-                if (a.featured === true || b.featured === true) {
-                    console.log(`Sorting: ${a.name} (featured: ${a.featured}) vs ${b.name} (featured: ${b.featured})`);
-                }
-                
-                // First sort by featured status (true first, nulls last)
-                if (a.featured === true && b.featured !== true) return -1;
-                if (a.featured !== true && b.featured === true) return 1;
-                
-                // Then sort by creation date (newest first)
-                return new Date(b.created_at) - new Date(a.created_at);
-            });
+            // Apply sorting to filtered protocols
+            filteredProtocols = sortProtocols(filteredProtocols);
             
             // Update display
             if (filteredProtocols.length === 0) {
@@ -501,8 +526,10 @@
         function clearSearch() {
             const searchInput = document.getElementById('searchInput');
             const categoryFilter = document.getElementById('categoryFilter');
+            const sortFilter = document.getElementById('sortFilter');
             searchInput.value = '';
             categoryFilter.value = '';
+            sortFilter.value = 'featured-date'; // Reset to default sort
             filterProtocols();
         }
         
@@ -519,6 +546,12 @@
             // Add category filter event listener
             const categoryFilter = document.getElementById('categoryFilter');
             categoryFilter.addEventListener('change', () => {
+                filterProtocols();
+            });
+            
+            // Add sort filter event listener
+            const sortFilter = document.getElementById('sortFilter');
+            sortFilter.addEventListener('change', () => {
                 filterProtocols();
             });
         });

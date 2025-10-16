@@ -586,9 +586,11 @@ html {
     min-height: 1.2rem;
 }
 
-/* Category Filter Styles */
+/* Filter Styles */
 .filter-container {
     margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
 }
 
 .category-dropdown {
@@ -1473,6 +1475,11 @@ html {
     .search-icon {
         right: 1rem;
         font-size: 1rem;
+    }
+    
+    .filter-container {
+        flex-direction: column;
+        gap: 0.8rem;
     }
     
     .category-dropdown {
