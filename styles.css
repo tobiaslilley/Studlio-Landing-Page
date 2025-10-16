@@ -50,28 +50,6 @@ p {
     padding: 0 2rem;
 }
 
-/* Allow wider container for health metrics on large screens */
-.health-metrics .container {
-    max-width: 1200px;
-}
-
-@media (min-width: 1200px) {
-    .health-metrics .container {
-        max-width: 1600px;
-    }
-}
-
-@media (min-width: 1600px) {
-    .health-metrics .container {
-        max-width: 2200px;
-    }
-}
-
-@media (min-width: 2000px) {
-    .health-metrics .container {
-        max-width: 2800px;
-    }
-}
 
 /* Development Banner */
 .dev-banner {
@@ -945,84 +923,8 @@ html {
     background-color: #333941;
 }
 
-/* Health Metrics Page Styles */
-.health-metrics {
-    padding: 180px 0 80px; /* Account for dev banner and navbar */
-    min-height: 100vh;
-}
 
-.health-metrics-header {
-    text-align: center;
-    margin-bottom: 4rem;
-    padding-top: 2rem;
-}
 
-.health-metrics-subtitle {
-    font-size: 1.3rem;
-    color: #666;
-    max-width: 800px;
-    margin: 0 auto 3rem;
-    line-height: 1.7;
-}
-
-.metrics-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-top: 3rem;
-    justify-content: center;
-}
-
-/* Responsive grid for different screen sizes */
-@media (min-width: 480px) {
-    .metrics-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Extra small screens (iPhone SE, etc.) */
-@media (max-width: 375px) {
-    .metrics-grid {
-        gap: 1rem;
-    }
-    
-    .metric-card {
-        padding: 1rem;
-    }
-    
-    .metric-chart-container {
-        height: 200px;
-        padding: 0.5rem;
-    }
-    
-    .metric-title {
-        font-size: 1.1rem;
-    }
-}
-
-@media (min-width: 768px) {
-    .metrics-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .metrics-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (min-width: 1200px) {
-    .metrics-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (min-width: 1600px) {
-    .metrics-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
 
 .metric-card {
     background-color: #ffffff;
@@ -1579,43 +1481,6 @@ html {
         padding-right: 2.5rem;
     }
     
-    /* Health metrics responsive adjustments */
-    .health-metrics {
-        padding: 160px 0 80px;
-    }
-    
-    .metrics-grid {
-        gap: 1.5rem;
-    }
-    
-    .metric-card {
-        padding: 1.5rem;
-    }
-    
-    .metric-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    
-    .metric-title {
-        font-size: 1.2rem;
-    }
-    
-    .metric-chart-container {
-        height: 250px;
-        padding: 0.8rem;
-        min-height: 200px;
-    }
-    
-    .metric-stats {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-    }
-    
-    .stat-item {
-        padding: 0.6rem;
-    }
 }
 
 /* ===== ADMIN MANAGEMENT STYLES ===== */
