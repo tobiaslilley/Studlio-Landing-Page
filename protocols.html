@@ -398,7 +398,10 @@
         
         // Sort protocols based on selected sort option
         function sortProtocols(protocols) {
-            const sortOption = document.getElementById('sortFilter').value;
+            const sortFilter = document.getElementById('sortFilter');
+            const sortOption = sortFilter ? sortFilter.value : 'featured-date';
+            
+            console.log('Sorting protocols with option:', sortOption);
             
             return protocols.sort((a, b) => {
                 switch (sortOption) {
