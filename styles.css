@@ -1819,3 +1819,41 @@ html {
         width: 100%;
     }
 }
+
+/* Citations styling */
+.citations-count {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid #dee2e6;
+}
+
+.citations-preview {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border-left: 3px solid #007bff;
+    font-size: 0.9rem;
+    color: #495057;
+    line-height: 1.4;
+}
+
+.citations-preview strong {
+    color: #007bff;
+}
+
+/* Citations textarea styling */
+#protocolCitations {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+#protocolCitations:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

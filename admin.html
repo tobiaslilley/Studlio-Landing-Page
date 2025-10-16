@@ -290,6 +290,12 @@
                 </div>
                 
                 <div class="form-group">
+                    <label for="protocolCitations">Citations</label>
+                    <textarea id="protocolCitations" name="citations" rows="3" placeholder="Enter citations as JSON array, e.g., [&quot;Author, A. (2024). Title. Journal.&quot;, &quot;Another citation...&quot;]"></textarea>
+                    <small>Enter citations as a JSON array of strings. Each citation should be a complete reference.</small>
+                </div>
+                
+                <div class="form-group">
                     <label>
                         <input type="checkbox" id="protocolIsDefault" name="is_default">
                         Set as default protocol
@@ -395,9 +401,14 @@
                     <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="footer-logo-img">
                 </div>
                 <div class="footer-links">
-                    <a href="index.html">Home</a>
+                    <a href="index.html#features">Features</a>
+                    <a href="index.html#download">Download</a>
+                    <a href="index.html#contact">Contact</a>
                     <a href="protocols.html">Protocols</a>
+                    <a href="admin.html">Admin</a>
                     <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="https://x.com/studl_io" target="_blank" rel="noopener noreferrer">Follow on X</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -609,8 +620,10 @@
                             <span class="category">${escapeHtml(protocol.category || 'General')}</span>
                             ${protocol.unit && protocol.unit !== '—' ? `<span class="unit">${escapeHtml(protocol.unit)}</span>` : ''}
                             ${protocol.is_default ? '<span class="badge">Default</span>' : ''}
+                            ${protocol.citations && protocol.citations.length > 0 ? `<span class="citations-count">${protocol.citations.length} citation${protocol.citations.length === 1 ? '' : 's'}</span>` : ''}
                         </p>
                         <p class="item-description">${escapeHtml(protocol.description || 'No description')}</p>
+                        ${protocol.citations && protocol.citations.length > 0 ? `<div class="citations-preview"><strong>Citations:</strong> ${protocol.citations.slice(0, 2).map(citation => escapeHtml(citation)).join('; ')}${protocol.citations.length > 2 ? '...' : ''}</div>` : ''}
                     </div>
                     <div class="item-actions">
                         <button class="btn btn-small btn-secondary" onclick="editProtocol('${protocol.id}')">Edit</button>
@@ -648,6 +661,7 @@
                 document.getElementById('protocolDescription').value = protocol.description || '';
                 document.getElementById('protocolUnit').value = protocol.unit || '';
                 document.getElementById('protocolDefaultValue').value = protocol.default_value || '';
+                document.getElementById('protocolCitations').value = protocol.citations ? JSON.stringify(protocol.citations, null, 2) : '[]';
                 document.getElementById('protocolIsDefault').checked = protocol.is_default || false;
 
                 // Populate health metrics dropdown and select current ones
@@ -724,12 +738,27 @@
             e.preventDefault();
 
             const formData = new FormData(e.target);
+            
+            // Parse citations JSON
+            let citations = [];
+            try {
+                const citationsText = formData.get('citations') || '[]';
+                citations = JSON.parse(citationsText);
+                if (!Array.isArray(citations)) {
+                    throw new Error('Citations must be an array');
+                }
+            } catch (error) {
+                alert('Error parsing citations: ' + error.message + '\nPlease ensure citations are in valid JSON array format.');
+                return;
+            }
+            
             const protocolData = {
                 name: formData.get('name'),
                 category: formData.get('category'),
                 description: formData.get('description'),
                 unit: formData.get('unit'),
                 default_value: formData.get('default_value') ? parseFloat(formData.get('default_value')) : null,
+                citations: citations,
                 is_default: formData.get('is_default') === 'on',
                 metric_ids: Array.from(document.getElementById('protocolMetricIds').selectedOptions).map(option => option.value)
             };
@@ -1065,7 +1094,8 @@
             const filteredProtocols = allProtocols.filter(protocol => 
                 protocol.name.toLowerCase().includes(searchTerm) ||
                 protocol.category.toLowerCase().includes(searchTerm) ||
-                (protocol.description && protocol.description.toLowerCase().includes(searchTerm))
+                (protocol.description && protocol.description.toLowerCase().includes(searchTerm)) ||
+                (protocol.citations && protocol.citations.some(citation => citation.toLowerCase().includes(searchTerm)))
             );
             displayProtocolsForManagement(filteredProtocols);
         });
