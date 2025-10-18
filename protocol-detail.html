@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocol Details - STUDL.IO</title>
+    <meta name="description" content="Detailed view of health protocol in STUDL.IO">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="Assets/Website-Favicon-Color.svg">
+    
+    <!-- Preload fonts for better performance -->
+    <link rel="preload" href="Assets/Sanger.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="Assets/Cartograph-Sans-Light.ttf" as="font" type="font/ttf" crossorigin>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Supabase -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://htizxlmrzfehvpupvwbn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Check authentication status
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuthStatus();
+            await loadProtocolDetails();
+        });
+        
+        async function checkAuthStatus() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                
+                if (session) {
+                    updateNavForLoggedInUser();
+                }
+            } catch (error) {
+                console.error('Error checking auth status:', error);
+            }
+        }
+        
+        function updateNavForLoggedInUser() {
+            const adminLink = document.querySelector('a[href="admin.html"]');
+            if (adminLink) {
+                adminLink.textContent = 'Admin Dashboard';
+                adminLink.style.color = '#28a745';
+                adminLink.style.fontWeight = '600';
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="nav-logo-img">
+                </a>
+            </div>
+            <div class="nav-links">
+                <a href="index.html#features">Features</a>
+                <a href="index.html#download">Download</a>
+                <a href="index.html#contact">Contact</a>
+                <a href="protocols.html">Protocols</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Development Status Banner -->
+    <div class="dev-banner">
+        <div class="container">
+            <p>🚧 <strong>Coming Soon!</strong> STUDL.IO is currently in development and will be available soon. Stay tuned for updates!</p>
+        </div>
+    </div>
+
+    <!-- Protocol Detail Section -->
+    <section class="protocol-detail">
+        <div class="container">
+            <!-- Back Button -->
+            <div class="back-button-container">
+                <a href="protocols.html" class="btn btn-secondary">
+                    ← Back to Protocols
+                </a>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loading" class="loading-state">
+                <div class="loading-spinner"></div>
+                <p>Loading protocol details...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div id="error" class="error-state" style="display: none;">
+                <div class="error-icon">⚠️</div>
+                <h3>Protocol not found</h3>
+                <p>The requested protocol could not be found. It may have been removed or the link is incorrect.</p>
+                <a href="protocols.html" class="btn btn-primary">Back to Protocols</a>
+            </div>
+            
+            <!-- Protocol Detail Content -->
+            <div id="protocol-detail-content" class="protocol-detail-content" style="display: none;">
+                <!-- Protocol will be dynamically inserted here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="footer-logo-img">
+                </div>
+                <div class="footer-links">
+                    <a href="index.html#features">Features</a>
+                    <a href="index.html#download">Download</a>
+                    <a href="index.html#contact">Contact</a>
+                    <a href="protocols.html">Protocols</a>
+                    <a href="admin.html">Admin</a>
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="https://x.com/studl_io" target="_blank" rel="noopener noreferrer">Follow on X</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 STUDL.IO. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Global variables
+        let allMetricsMap = {};
+        
+        // Load protocol details from Supabase
+        async function loadProtocolDetails() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const contentEl = document.getElementById('protocol-detail-content');
+            
+            try {
+                // Get protocol ID from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const protocolId = urlParams.get('id');
+                
+                if (!protocolId) {
+                    throw new Error('No protocol ID provided');
+                }
+                
+                // Show loading state
+                loadingEl.style.display = 'block';
+                errorEl.style.display = 'none';
+                contentEl.style.display = 'none';
+                
+                // Fetch protocol from Supabase
+                const { data: protocol, error: protocolError } = await supabase
+                    .from('protocols')
+                    .select('*')
+                    .eq('id', protocolId)
+                    .single();
+                
+                if (protocolError) {
+                    throw protocolError;
+                }
+                
+                if (!protocol) {
+                    throw new Error('Protocol not found');
+                }
+                
+                // Fetch all health metrics
+                const { data: healthMetrics, error: metricsError } = await supabase
+                    .from('health_metrics')
+                    .select('id, name, unit');
+                
+                if (metricsError) {
+                    throw metricsError;
+                }
+                
+                // Create a map of metric IDs to metric names for quick lookup
+                const metricsMap = {};
+                if (healthMetrics) {
+                    healthMetrics.forEach(metric => {
+                        metricsMap[metric.id] = {
+                            name: metric.name,
+                            unit: metric.unit
+                        };
+                    });
+                }
+                
+                allMetricsMap = metricsMap;
+                
+                // Hide loading state
+                loadingEl.style.display = 'none';
+                
+                // Display protocol details
+                displayProtocolDetail(protocol, metricsMap);
+                contentEl.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading protocol details:', error);
+                
+                // Show error state
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+            }
+        }
+        
+        // Parse markdown content to HTML
+        function parseMarkdown(text) {
+            if (!text) return '';
+            
+            // Escape HTML first to prevent XSS
+            let html = escapeHtml(text);
+            
+            // Convert markdown to HTML
+            // Headers (## Header, ### Header, etc.)
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            
+            // Bold text (**text** or __text__)
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+            
+            // Italic text (*text* or _text_)
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+            
+            // Code blocks (```code```)
+            html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            
+            // Inline code (`code`)
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Links [text](url)
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+            
+            // Unordered lists (- item or * item)
+            html = html.replace(/^[\s]*[-*] (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            
+            // Ordered lists (1. item)
+            html = html.replace(/^[\s]*\d+\. (.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ol>$1</ol>');
+            
+            // Line breaks (double newline = paragraph)
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = '<p>' + html + '</p>';
+            
+            // Clean up empty paragraphs
+            html = html.replace(/<p><\/p>/g, '');
+            html = html.replace(/<p>\s*<\/p>/g, '');
+            
+            return html;
+        }
+        
+        // Display protocol details
+        function displayProtocolDetail(protocol, metricsMap) {
+            const contentEl = document.getElementById('protocol-detail-content');
+            
+            // Get the actual metric names for this protocol
+            const metricNames = [];
+            if (protocol.metric_ids && protocol.metric_ids.length > 0) {
+                protocol.metric_ids.forEach(metricId => {
+                    if (metricsMap[metricId]) {
+                        metricNames.push(metricsMap[metricId].name);
+                    }
+                });
+            }
+            
+            // Generate citations HTML if they exist
+            let citationsHtml = '';
+            
+            if (protocol.citations && Array.isArray(protocol.citations) && protocol.citations.length > 0) {
+                citationsHtml = `
+                    <div class="protocol-citations">
+                        <h4 class="citations-title">Citations:</h4>
+                        <ul class="citations-list">
+                            ${protocol.citations.map(citation => {
+                                if (citation && citation.title && citation.url) {
+                                    return `
+                                        <li class="citation-item">
+                                            <a href="${escapeHtml(citation.url)}" target="_blank" rel="noopener noreferrer" class="citation-link">
+                                                ${escapeHtml(citation.title)}
+                                            </a>
+                                        </li>
+                                    `;
+                                }
+                                return '';
+                            }).filter(html => html).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            contentEl.innerHTML = `
+                <div class="protocol-detail-card ${protocol.featured ? 'featured-protocol' : ''}">
+                    <div class="protocol-detail-header">
+                        <div class="protocol-detail-title-row">
+                            <h1 class="protocol-detail-title">${escapeHtml(protocol.name || 'Untitled Protocol')}</h1>
+                            ${protocol.featured ? '<span class="featured-badge">Featured</span>' : ''}
+                        </div>
+                        <div class="protocol-tags">
+                            ${protocol.category ? `
+                                <span class="protocol-tag category-${protocol.category.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}">${escapeHtml(protocol.category)}</span>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="protocol-detail-content-inner">
+                        <div class="protocol-detail-description">
+                            <div class="markdown-content">${parseMarkdown(protocol.description || 'No description available.')}</div>
+                            
+                            ${protocol.default_value && protocol.unit && protocol.unit !== '—' ? `
+                                <div class="typical-value">
+                                    <strong>Typical Value:</strong> ${escapeHtml(protocol.default_value)}${escapeHtml(protocol.unit)}
+                                </div>
+                            ` : ''}
+                            
+                            ${citationsHtml}
+                            
+                            ${metricNames.length > 0 ? `
+                                <div class="tracked-metrics">
+                                    <h3>Tracked Metrics</h3>
+                                    <div class="metrics-grid">
+                                        ${metricNames.map(name => `
+                                            <div class="metric-item">
+                                                <span class="metric-name">${escapeHtml(name)}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Helper function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Helper function to convert URLs to clickable links with shortened text
+        function convertUrlsToLinks(text) {
+            if (!text) return text;
+            
+            // URL regex pattern - matches http/https URLs
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            
+            return text.replace(urlRegex, (url) => {
+                // Create a shortened display text
+                let displayText = url;
+                
+                // Remove protocol for display
+                if (url.startsWith('https://')) {
+                    displayText = url.substring(8);
+                } else if (url.startsWith('http://')) {
+                    displayText = url.substring(7);
+                }
+                
+                // Truncate if too long (keep first part and last part)
+                if (displayText.length > 50) {
+                    const firstPart = displayText.substring(0, 30);
+                    const lastPart = displayText.substring(displayText.length - 20);
+                    displayText = firstPart + '...' + lastPart;
+                }
+                
+                // Return clickable link
+                return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="protocol-link">${escapeHtml(displayText)}</a>`;
+            });
+        }
+        
+        // Helper function to format date
+        function formatDate(dateString) {
+            if (!dateString) return 'Unknown date';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "W36Q78A5AL.com.tobiaslilley.studlio",
+        "paths": [
+          "/protocol/*"
+        ]
+      }
+    ]
+  }
+}

@@ -25,7 +25,12 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY';
         
         // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase;
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        } else {
+            console.error('Supabase client not loaded');
+        }
         
         // Check authentication status
         document.addEventListener('DOMContentLoaded', async () => {
@@ -233,8 +238,9 @@
                 allProtocols = protocols || [];
                 allMetricsMap = metricsMap;
                 
-                // Debug: Log featured protocols
+                // Debug: Log featured protocols and protocol IDs
                 console.log('Featured protocols:', protocols.filter(p => p.featured === true).map(p => p.name));
+                console.log('Protocol IDs:', protocols.map(p => ({ id: p.id, name: p.name })));
                 
                 // Hide loading state
                 loadingEl.style.display = 'none';
@@ -267,6 +273,8 @@
         // Display protocols in the grid
         function displayProtocols(protocols, metricsMap) {
             const protocolsGridEl = document.getElementById('protocols-grid');
+            console.log('Displaying protocols:', protocols.length);
+            console.log('First protocol ID:', protocols[0]?.id);
             
             protocolsGridEl.innerHTML = protocols.map(protocol => {
                 // Get the actual metric names for this protocol
@@ -298,33 +306,37 @@
                     `;
                 }
                 
+                const protocolId = protocol.id || 'unknown';
+                // Create tags array
+                const tags = [];
+                if (protocol.featured) tags.push('Featured');
+                if (protocol.category) tags.push(protocol.category);
+                
+                // Truncate description to 3 lines
+                let description = protocol.description || 'No description available.';
+                const lines = description.split('\n');
+                if (lines.length > 3) {
+                    description = lines.slice(0, 3).join('\n') + '...';
+                }
+                
                 return `
-                <div class="protocol-card ${protocol.featured ? 'featured-protocol' : ''}">
+                <div class="protocol-card ${protocol.featured ? 'featured-protocol' : ''}" onclick="viewProtocolDetails('${protocolId}')">
                     <div class="protocol-header">
-                        <div class="protocol-title-row">
-                            <h3 class="protocol-title">${convertUrlsToLinks(escapeHtml(protocol.name || 'Untitled Protocol'))}</h3>
-                            ${protocol.featured ? '<span class="featured-badge">⭐ Featured</span>' : ''}
-                        </div>
-                        <div class="protocol-category">${convertUrlsToLinks(escapeHtml(protocol.category || 'General'))}</div>
+                        <h3 class="protocol-title">${escapeHtml(protocol.name || 'Untitled Protocol')}</h3>
+                        ${protocol.featured ? '<span class="featured-badge">Featured</span>' : ''}
                     </div>
                     <div class="protocol-content">
-                        <p class="protocol-description">${convertUrlsToLinks(escapeHtml(protocol.description || 'No description available.'))}</p>
-                        ${citationsHtml}
-                        ${protocol.unit && protocol.unit !== '—' ? `<div class="protocol-detail"><strong>Unit:</strong> ${convertUrlsToLinks(escapeHtml(protocol.unit))}</div>` : ''}
-                        ${protocol.default_value ? `<div class="protocol-detail"><strong>Default Value:</strong> ${convertUrlsToLinks(escapeHtml(protocol.default_value))}</div>` : ''}
-                        ${metricNames.length > 0 ? `
-                            <div class="protocol-detail">
-                                <strong>Tracked Metrics:</strong>
-                                <div class="metrics-list">
-                                    ${metricNames.map(name => `<span class="metric-tag">${escapeHtml(name)}</span>`).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
+                        <div class="protocol-description">${convertMarkdownToHtml(description)}</div>
                     </div>
                     <div class="protocol-footer">
-                        <div class="protocol-meta">
-                            <span class="protocol-date">${formatDate(protocol.created_at)}</span>
+                        <div class="protocol-tags">
+                            ${tags.filter(tag => tag !== 'Featured').map(tag => {
+                                // Convert category name to CSS class
+                                const categoryClass = tag.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                                return `<span class="protocol-tag category-${categoryClass}">${escapeHtml(tag)}</span>`;
+                            }).join('')}
                         </div>
+                        <button class="btn btn-sm btn-primary protocol-open-btn">Open Protocol</button>
                     </div>
                 </div>
             `;
@@ -338,14 +350,49 @@
             return div.innerHTML;
         }
         
-        // Helper function to convert URLs to clickable links with shortened text
-        function convertUrlsToLinks(text) {
+        // Helper function to convert markdown to HTML
+        function convertMarkdownToHtml(text) {
             if (!text) return text;
             
-            // URL regex pattern - matches http/https URLs
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            // Convert markdown formatting to HTML
+            let html = text;
             
-            return text.replace(urlRegex, (url) => {
+            // Headers: # ## ### #### ##### ######
+            html = html.replace(/^#{6}\s+(.*)$/gm, '<h6>$1</h6>');
+            html = html.replace(/^#{5}\s+(.*)$/gm, '<h5>$1</h5>');
+            html = html.replace(/^#{4}\s+(.*)$/gm, '<h4>$1</h4>');
+            html = html.replace(/^#{3}\s+(.*)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^#{2}\s+(.*)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^#{1}\s+(.*)$/gm, '<h1>$1</h1>');
+            
+            // Bold text: **text** or __text__
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+            
+            // Italic text: *text* or _text_
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+            
+            // Code: `code`
+            html = html.replace(/`(.*?)`/g, '<code>$1</code>');
+            
+            // Clean up leading/trailing whitespace and newlines
+            html = html.trim();
+            
+            // Handle line breaks more carefully
+            if (html.includes('\n\n')) {
+                // Multiple paragraphs: Convert double newlines to paragraph breaks
+                html = html.replace(/\n\n/g, '</p><p>');
+                html = '<p>' + html + '</p>';
+            } else {
+                // Single paragraph: Convert single newlines to <br>
+                html = html.replace(/\n/g, '<br>');
+                html = '<p>' + html + '</p>';
+            }
+            
+            // URLs: Convert to clickable links
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            html = html.replace(urlRegex, (url) => {
                 // Create a shortened display text
                 let displayText = url;
                 
@@ -366,6 +413,13 @@
                 // Return clickable link
                 return `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="protocol-link">${escapeHtml(displayText)}</a>`;
             });
+            
+            return html;
+        }
+        
+        // Legacy function for backward compatibility
+        function convertUrlsToLinks(text) {
+            return convertMarkdownToHtml(text);
         }
         
         // Helper function to format date
@@ -536,8 +590,17 @@
             filterProtocols();
         }
         
+        // Function to view protocol details
+        function viewProtocolDetails(protocolId) {
+            console.log('Clicked protocol with ID:', protocolId);
+            // Navigate to protocol detail page with ID as parameter
+            window.location.href = `protocol-detail.html?id=${protocolId}`;
+        }
+        
+        
         // Load protocols when page loads
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, starting to load protocols...');
             loadProtocols();
             
             // Add search event listener

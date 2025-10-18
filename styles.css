@@ -45,7 +45,7 @@ p {
 
 /* Container */
 .container {
-    max-width: 1200px;
+    max-width: 2000px;
     margin: 0 auto;
     padding: 0 2rem;
 }
@@ -647,24 +647,36 @@ html {
 .protocols-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
     margin-top: 3rem;
+}
+
+/* Mobile: Force single column on very small screens */
+@media (max-width: 400px) {
+    .protocols-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .protocol-card {
     background-color: #ffffff;
     border-radius: 20px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(51, 57, 65, 0.1);
     word-wrap: break-word;
     overflow-wrap: break-word;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .protocol-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
 }
 
 /* Featured Protocol Styles */
@@ -694,6 +706,14 @@ html {
     flex-wrap: wrap;
 }
 
+.protocol-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
 .featured-badge {
     background: linear-gradient(135deg, #ffd700, #ffed4e);
     color: #8b6914;
@@ -720,6 +740,10 @@ html {
     margin: 0;
     flex: 1;
     line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    min-width: 0;
 }
 
 .protocol-category {
@@ -733,26 +757,220 @@ html {
 }
 
 .protocol-content {
-    margin-bottom: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .protocol-description {
     color: #666;
     line-height: 1.6;
     margin-bottom: 1rem;
-    font-size: 1rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    hyphens: auto;
+}
+
+.protocol-description p {
+    margin-bottom: 0.5rem;
+}
+
+.protocol-description strong {
+    font-weight: 600;
+    color: #333941;
+}
+
+.protocol-description em {
+    font-style: italic;
+    color: #555;
+}
+
+.protocol-description code {
+    background-color: #f5f5f5;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #d63384;
+}
+
+.protocol-description h1,
+.protocol-description h2,
+.protocol-description h3,
+.protocol-description h4,
+.protocol-description h5,
+.protocol-description h6 {
+    font-family: 'Sanger', serif;
+    font-weight: normal;
+    color: #333941;
+    margin: 0.5rem 0 0.25rem 0;
+    line-height: 1.2;
+}
+
+.protocol-description h1 { font-size: 1.3rem; }
+.protocol-description h2 { font-size: 1.2rem; }
+.protocol-description h3 { font-size: 1.1rem; }
+.protocol-description h4 { font-size: 1.05rem; }
+.protocol-description h5 { font-size: 1rem; }
+.protocol-description h6 { font-size: 0.95rem; }
+
+/* Protocol Tags */
+.protocol-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.protocol-tag {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.protocol-tag:first-child {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #8b6914;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+    font-weight: 600;
+}
+
+.protocol-tag:not(:first-child) {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #495057;
+    border: 1px solid #dee2e6;
+}
+
+/* Category-specific colors - using class-based approach */
+.protocol-tag.category-nutrition {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.protocol-tag.category-exercise {
+    background: linear-gradient(135deg, #007bff, #6610f2);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.protocol-tag.category-sleep {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
+}
+
+.protocol-tag.category-mental-health {
+    background: linear-gradient(135deg, #fd7e14, #ffc107);
+    color: white;
+    box-shadow: 0 2px 8px rgba(253, 126, 20, 0.3);
+}
+
+.protocol-tag.category-general {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.protocol-tag.category-wellness {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    color: white;
+    box-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
+}
+
+.protocol-tag.category-fitness {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.protocol-tag.category-health {
+    background: linear-gradient(135deg, #17a2b8, #007bff);
+    color: white;
+    box-shadow: 0 2px 8px rgba(23, 162, 184, 0.3);
+}
+
+.protocol-tag.category-supplement {
+    background: linear-gradient(135deg, #e83e8c, #fd7e14);
+    color: white;
+    box-shadow: 0 2px 8px rgba(232, 62, 140, 0.3);
+}
+
+.protocol-tag.category-diet {
+    background: linear-gradient(135deg, #20c997, #28a745);
+    color: white;
+    box-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
+}
+
+.protocol-tag.category-environment {
+    background: linear-gradient(135deg, #6c757d, #17a2b8);
+    color: white;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.protocol-tag.category-lifestyle {
+    background: linear-gradient(135deg, #6f42c1, #e83e8c);
+    color: white;
+    box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
+}
+
+.protocol-tag.category-mental {
+    background: linear-gradient(135deg, #fd7e14, #ffc107);
+    color: white;
+    box-shadow: 0 2px 8px rgba(253, 126, 20, 0.3);
+}
+
+.protocol-tag.category-mental-physical {
+    background: linear-gradient(135deg, #dc3545, #fd7e14);
+    color: white;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.protocol-tag.category-recovery {
+    background: linear-gradient(135deg, #20c997, #17a2b8);
+    color: white;
+    box-shadow: 0 2px 8px rgba(32, 201, 151, 0.3);
+}
+
+.protocol-tag.category-tracking {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.protocol-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Protocol Open Button - match tag size */
+.protocol-open-btn {
+    height: 2rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 /* Citations Styles */
 .protocol-citations {
     margin: 1rem 0;
-    padding: 1rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #007bff;
 }
 
 .citations-title {
@@ -806,6 +1024,7 @@ html {
     color: #555;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    line-height: 1.4;
 }
 
 .protocol-detail strong {
@@ -827,8 +1046,12 @@ html {
 }
 
 .protocol-footer {
-    border-top: 1px solid rgba(51, 57, 65, 0.1);
     padding-top: 1rem;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
 }
 
 .protocol-meta {
@@ -837,6 +1060,21 @@ html {
     align-items: center;
     font-size: 0.9rem;
     color: #999;
+}
+
+.view-details-hint {
+    color: #999;
+    font-style: italic;
+    font-size: 0.7rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+.protocol-card:hover .view-details-hint {
+    opacity: 0.6;
 }
 
 .protocol-badge {
@@ -1453,6 +1691,12 @@ html {
         gap: 0.5rem;
     }
     
+    .view-details-hint {
+        opacity: 0.8;
+        font-size: 0.65rem;
+        margin-left: 0.25rem;
+    }
+    
     .metrics-list {
         gap: 0.3rem;
     }
@@ -1841,9 +2085,6 @@ html {
 .citations-preview {
     margin-top: 0.5rem;
     padding: 0.75rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    border-left: 3px solid #007bff;
     font-size: 0.9rem;
     color: #495057;
     line-height: 1.4;
@@ -1863,4 +2104,393 @@ html {
 #protocolCitations:focus {
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* ===== PROTOCOL DETAIL PAGE STYLES ===== */
+
+/* Protocol Detail Page */
+.protocol-detail {
+    padding: 180px 0 80px; /* Account for dev banner and navbar */
+    min-height: 100vh;
+    background-color: #fafafa;
+}
+
+.back-button-container {
+    margin-bottom: 2rem;
+}
+
+.protocol-detail-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.protocol-detail-card {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(51, 57, 65, 0.1);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.protocol-detail-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.protocol-detail-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.protocol-detail-title {
+    font-size: 2.5rem;
+    color: #333941;
+    margin: 0;
+    flex: 1;
+    line-height: 1.2;
+}
+
+.protocol-detail .protocol-tags {
+    margin-top: 1rem;
+}
+
+.protocol-detail .featured-badge {
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #8b6914;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    border: 1px solid rgba(255, 215, 0, 0.5);
+}
+
+.protocol-detail-category {
+    background-color: #e8f4f8;
+    color: #2c5aa0;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    border: 1px solid #d1e7dd;
+}
+
+.protocol-detail-content-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.protocol-detail-description h3,
+.protocol-detail-info h3,
+.tracked-metrics h3 {
+    font-size: 1.5rem;
+    color: #333941;
+    margin-bottom: 1rem;
+    font-family: 'Sanger', serif;
+}
+
+.protocol-detail-description p {
+    color: #666;
+    line-height: 1.7;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+/* Markdown content styling */
+.markdown-content {
+    color: #666;
+    line-height: 1.7;
+    font-size: 1.1rem;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    font-family: 'Sanger', serif;
+    color: #333941;
+    margin: 1.5rem 0 1rem 0;
+    line-height: 1.3;
+}
+
+.markdown-content h1 {
+    font-size: 2rem;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.5rem;
+}
+
+.markdown-content h2 {
+    font-size: 1.7rem;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 0.3rem;
+}
+
+.markdown-content h3 {
+    font-size: 1.4rem;
+}
+
+.markdown-content h4 {
+    font-size: 1.2rem;
+}
+
+.markdown-content h5,
+.markdown-content h6 {
+    font-size: 1.1rem;
+}
+
+.markdown-content p {
+    margin: 0 0 1rem 0;
+    color: #666;
+    line-height: 1.7;
+}
+
+.markdown-content strong {
+    color: #333941;
+    font-weight: 600;
+}
+
+.markdown-content em {
+    font-style: italic;
+    color: #555;
+}
+
+.markdown-content code {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 0.2rem 0.4rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #e83e8c;
+}
+
+.markdown-content pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.markdown-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #333941;
+    font-size: 0.9rem;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    margin: 1rem 0;
+    padding-left: 2rem;
+}
+
+.markdown-content li {
+    margin: 0.5rem 0;
+    color: #666;
+}
+
+.markdown-content a {
+    color: #007bff;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s ease;
+}
+
+.markdown-content a:hover {
+    border-bottom-color: #007bff;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #007bff;
+    padding-left: 1rem;
+    margin: 1rem 0;
+    color: #666;
+    font-style: italic;
+}
+
+/* Protocol citations styling */
+.protocol-citations {
+    margin: 2rem 0;
+}
+
+.citations-title {
+    font-size: 1.5rem;
+    color: #333941;
+    margin-bottom: 1rem;
+    font-family: 'Sanger', serif;
+}
+
+.citations-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.citation-item {
+    margin: 0.75rem 0;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.citation-item:last-child {
+    border-bottom: none;
+}
+
+.citation-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.citation-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.citation-text {
+    color: #666;
+    font-style: italic;
+}
+
+/* Typical value styling */
+.typical-value {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    color: #333941;
+}
+
+.typical-value strong {
+    color: #2c5aa0;
+    font-weight: 600;
+}
+
+.protocol-detail-info {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 15px;
+    border: 1px solid #e9ecef;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item strong {
+    color: #333941;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.info-item span {
+    color: #666;
+    font-size: 1rem;
+}
+
+.tracked-metrics {
+    margin: 2rem 0;
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.metric-item {
+    background-color: #ffffff;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.metric-name {
+    color: #2c5aa0;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Responsive Design for Protocol Detail Page */
+@media (max-width: 768px) {
+    .protocol-detail {
+        padding: 160px 0 80px;
+    }
+    
+    .protocol-detail-card {
+        padding: 2rem;
+        margin: 0 1rem;
+    }
+    
+    .protocol-detail-title {
+        font-size: 2rem;
+    }
+    
+    .protocol-detail-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .protocol-detail-category {
+        align-self: flex-start;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .metrics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .protocol-detail-content-inner {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .protocol-detail-title {
+        font-size: 1.5rem;
+    }
+    
+    .protocol-detail-card {
+        padding: 1.5rem;
+    }
+    
+    .protocol-detail-description h3,
+    .protocol-detail-info h3,
+    .protocol-detail-metrics h3 {
+        font-size: 1.3rem;
+    }
 }
