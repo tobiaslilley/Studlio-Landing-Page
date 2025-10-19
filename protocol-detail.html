@@ -6,6 +6,20 @@
     <title>Protocol Details - STUDL.IO</title>
     <meta name="description" content="Detailed view of health protocol in STUDL.IO">
     
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="Protocol Details - STUDL.IO">
+    <meta property="og:description" content="Detailed view of health protocol in STUDL.IO">
+    <meta property="og:image" content="https://studl.io/Assets/opengraph.png">
+    <meta property="og:url" content="https://studl.io/protocol-detail.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="STUDL.IO">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Protocol Details - STUDL.IO">
+    <meta name="twitter:description" content="Detailed view of health protocol in STUDL.IO">
+    <meta name="twitter:image" content="Assets/opengraph.png">
+    
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="Assets/Website-Favicon-Color.svg">
     
@@ -265,6 +279,9 @@
         function displayProtocolDetail(protocol, metricsMap) {
             const contentEl = document.getElementById('protocol-detail-content');
             
+            // Update Open Graph meta tags with protocol-specific information
+            updateOpenGraphMeta(protocol);
+            
             // Get the actual metric names for this protocol
             const metricNames = [];
             if (protocol.metric_ids && protocol.metric_ids.length > 0) {
@@ -390,6 +407,56 @@
                 month: 'long',
                 day: 'numeric'
             });
+        }
+        
+        // Update Open Graph meta tags with protocol-specific information
+        function updateOpenGraphMeta(protocol) {
+            const protocolName = protocol.name || 'Protocol Details';
+            const protocolDescription = protocol.description || 'Learn about this health optimization protocol.';
+            
+            // Truncate description if it's too long (OG descriptions work best under 160 characters)
+            let shortDescription = protocolDescription;
+            if (shortDescription.length > 150) {
+                shortDescription = shortDescription.substring(0, 147) + '...';
+            }
+            
+            // Update page title
+            document.title = `${protocolName} - STUDL.IO`;
+            
+            // Update Open Graph meta tags
+            updateMetaTag('og:title', `${protocolName} - STUDL.IO`);
+            updateMetaTag('og:description', shortDescription);
+            updateMetaTag('og:url', `https://studl.io/protocol-detail.html?id=${protocol.id}`);
+            
+            // Update Twitter Card meta tags
+            updateMetaTag('twitter:title', `${protocolName} - STUDL.IO`);
+            updateMetaTag('twitter:description', shortDescription);
+            
+            // Update regular meta description
+            updateMetaTag('description', shortDescription);
+        }
+        
+        // Helper function to update meta tags
+        function updateMetaTag(property, content) {
+            // Try to find existing meta tag
+            let metaTag = document.querySelector(`meta[property="${property}"]`);
+            if (!metaTag) {
+                metaTag = document.querySelector(`meta[name="${property}"]`);
+            }
+            
+            if (metaTag) {
+                metaTag.setAttribute('content', content);
+            } else {
+                // Create new meta tag if it doesn't exist
+                metaTag = document.createElement('meta');
+                if (property.startsWith('og:') || property.startsWith('twitter:')) {
+                    metaTag.setAttribute('property', property);
+                } else {
+                    metaTag.setAttribute('name', property);
+                }
+                metaTag.setAttribute('content', content);
+                document.head.appendChild(metaTag);
+            }
         }
     </script>
 </body>
