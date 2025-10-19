@@ -650,19 +650,8 @@
         function viewProtocolDetails(protocolId) {
             console.log('Clicked protocol with ID:', protocolId);
             
-            // Find the protocol data to get name and description for social sharing
-            const protocol = allProtocols.find(p => p.id === protocolId);
-            if (protocol) {
-                // URL encode the protocol name and description for the URL
-                const protocolName = encodeURIComponent(protocol.name || 'Protocol');
-                const protocolDescription = encodeURIComponent(protocol.description || '');
-                
-                // Navigate to protocol detail page with proper meta tags for social sharing
-                window.location.href = `/api/protocol/${protocolId}/meta`;
-            } else {
-                // Fallback to just ID if protocol not found
-                window.location.href = `/api/protocol/${protocolId}/meta`;
-            }
+            // Navigate directly to protocol detail page
+            window.location.href = `protocol-detail.html?id=${protocolId}`;
         }
         
         

@@ -226,42 +226,42 @@
                 errorEl.style.display = 'none';
                 contentEl.style.display = 'none';
                 
-                // Fetch protocol from Supabase
-                const { data: protocol, error: protocolError } = await supabase
-                    .from('protocols')
-                    .select('*')
-                    .eq('id', protocolId)
-                    .single();
+                // Fetch protocol from API endpoint
+                const response = await fetch(`/api/protocol/${protocolId}`);
                 
-                if (protocolError) {
-                    throw protocolError;
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
+                
+                const data = await response.json();
+                const protocol = data.protocol;
                 
                 if (!protocol) {
                     throw new Error('Protocol not found');
                 }
                 
-                // Fetch all health metrics
+                // Fetch all health metrics from Supabase for metric names
                 const { data: healthMetrics, error: metricsError } = await supabase
                     .from('health_metrics')
                     .select('id, name, unit');
                 
                 if (metricsError) {
-                    throw metricsError;
+                    console.warn('Could not fetch health metrics:', metricsError);
+                    // Continue without metrics if there's an error
+                    allMetricsMap = {};
+                } else {
+                    // Create a map of metric IDs to metric names for quick lookup
+                    const metricsMap = {};
+                    if (healthMetrics) {
+                        healthMetrics.forEach(metric => {
+                            metricsMap[metric.id] = {
+                                name: metric.name,
+                                unit: metric.unit
+                            };
+                        });
+                    }
+                    allMetricsMap = metricsMap;
                 }
-                
-                // Create a map of metric IDs to metric names for quick lookup
-                const metricsMap = {};
-                if (healthMetrics) {
-                    healthMetrics.forEach(metric => {
-                        metricsMap[metric.id] = {
-                            name: metric.name,
-                            unit: metric.unit
-                        };
-                    });
-                }
-                
-                allMetricsMap = metricsMap;
                 
                 // Hide loading state
                 loadingEl.style.display = 'none';
