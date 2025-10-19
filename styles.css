@@ -496,10 +496,13 @@ p {
 @media (max-width: 768px) {
     .dev-banner {
         padding: 0.5rem 0;
+        max-height: 3.5rem; /* Prevent banner from getting too tall */
     }
     
     .dev-banner p {
         font-size: 0.9rem;
+        line-height: 1.2;
+        margin: 0;
     }
     
     .navbar {
@@ -634,12 +637,18 @@ p {
 @media (max-width: 480px) {
     .dev-banner {
         padding: 0.4rem 0;
-        max-height: 3.5rem; /* Smaller max height on mobile */
+        max-height: 3rem; /* Smaller max height on mobile */
+        overflow: hidden;
     }
     
     .dev-banner p {
-        font-size: 0.85rem;
-        line-height: 1.2;
+        font-size: 0.8rem;
+        line-height: 1.1;
+        margin: 0;
+        /* Make text more compact to fit in smaller space */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .navbar {
@@ -656,7 +665,7 @@ p {
     }
     
     .hero {
-        padding: 6rem 0 3rem;
+        padding: 7rem 0 3rem; /* Increased top padding to prevent content from going behind header */
         /* Add bottom padding to prevent MailChimp popup overlap */
         padding-bottom: 5rem;
     }
@@ -804,6 +813,27 @@ textarea:focus {
     .btn-database {
         position: relative;
         z-index: 1;
+    }
+}
+
+/* Extra small screens - prevent banner text wrapping */
+@media (max-width: 360px) {
+    .dev-banner {
+        max-height: 2.5rem;
+        padding: 0.3rem 0;
+    }
+    
+    .dev-banner p {
+        font-size: 0.75rem;
+        line-height: 1;
+    }
+    
+    .navbar {
+        top: 2.5rem; /* Adjusted for even smaller banner */
+    }
+    
+    .hero {
+        padding: 6.5rem 0 3rem; /* Adjusted for smaller header */
     }
 }
 
