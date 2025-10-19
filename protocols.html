@@ -49,7 +49,43 @@
         // Check authentication status
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuthStatus();
+            initializeMobileNavigation();
         });
+        
+        // Initialize mobile navigation
+        function initializeMobileNavigation() {
+            const navToggle = document.querySelector('.nav-toggle');
+            const navLinks = document.querySelector('.nav-links');
+            
+            if (navToggle && navLinks) {
+                navToggle.addEventListener('click', () => {
+                    const isExpanded = navToggle.getAttribute('aria-expanded') === 'true';
+                    navToggle.setAttribute('aria-expanded', !isExpanded);
+                    navLinks.classList.toggle('active');
+                    
+                    // Update button text
+                    navToggle.textContent = isExpanded ? '☰' : '✕';
+                });
+                
+                // Close menu when clicking on a link
+                navLinks.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'A') {
+                        navLinks.classList.remove('active');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navToggle.textContent = '☰';
+                    }
+                });
+                
+                // Close menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                        navLinks.classList.remove('active');
+                        navToggle.setAttribute('aria-expanded', 'false');
+                        navToggle.textContent = '☰';
+                    }
+                });
+            }
+        }
         
         async function checkAuthStatus() {
             try {
@@ -74,19 +110,25 @@
     </script>
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
     <!-- Navigation -->
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
             <div class="nav-logo">
-                <a href="index.html">
+                <a href="index.html" aria-label="STUDL.IO Home">
                     <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="nav-logo-img">
                 </a>
             </div>
-            <div class="nav-links">
-                <a href="index.html#features">Features</a>
-                <a href="index.html#download">Download</a>
-                <a href="index.html#contact">Contact</a>
-                <a href="protocols.html" class="active">Protocols</a>
+            <button class="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                ☰
+            </button>
+            <div class="nav-links" role="menubar">
+                <a href="index.html#features" role="menuitem">Features</a>
+                <a href="index.html#download" role="menuitem">Download</a>
+                <a href="index.html#contact" role="menuitem">Contact</a>
+                <a href="protocols.html" class="active" role="menuitem">Protocols</a>
             </div>
         </div>
     </nav>
@@ -99,7 +141,7 @@
     </div>
 
     <!-- Protocols Section -->
-    <section class="protocols">
+    <section id="main-content" class="protocols">
         <div class="container">
             <div class="protocols-header">
                 <h1 class="section-title">Health Protocols</h1>
