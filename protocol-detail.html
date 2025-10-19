@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protocol Details - STUDL.IO</title>
-    <meta name="description" content="Detailed view of health protocol in STUDL.IO">
+    <title id="page-title">Protocol Details - STUDL.IO</title>
+    <meta name="description" content="Detailed view of health protocol in STUDL.IO" id="meta-description">
     
     <!-- OpenGraph Meta Tags -->
-    <meta property="og:title" content="Protocol Details - STUDL.IO">
-    <meta property="og:description" content="Detailed view of health protocol in STUDL.IO">
+    <meta property="og:title" content="Protocol Details - STUDL.IO" id="og-title">
+    <meta property="og:description" content="Detailed view of health protocol in STUDL.IO" id="og-description">
     <meta property="og:image" content="https://studl.io/Assets/opengraph.png">
-    <meta property="og:url" content="https://studl.io/protocol-detail.html">
+    <meta property="og:url" content="https://studl.io/protocol-detail.html" id="og-url">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="STUDL.IO">
     
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Protocol Details - STUDL.IO">
-    <meta name="twitter:description" content="Detailed view of health protocol in STUDL.IO">
+    <meta name="twitter:title" content="Protocol Details - STUDL.IO" id="twitter-title">
+    <meta name="twitter:description" content="Detailed view of health protocol in STUDL.IO" id="twitter-description">
     <meta name="twitter:image" content="Assets/opengraph.png">
     
     <!-- Favicon -->
@@ -41,15 +41,14 @@
         // Initialize Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Update meta tags immediately if protocol data is available in URL params
+        // IMMEDIATE meta tag update - this runs before DOM is ready
         (function() {
             const urlParams = new URLSearchParams(window.location.search);
             const protocolId = urlParams.get('id');
-            const protocolName = urlParams.get('name');
-            const protocolDescription = urlParams.get('description');
             
-            if (protocolId && protocolName) {
-                updateOpenGraphMetaFromParams(protocolName, protocolDescription, protocolId);
+            if (protocolId) {
+                // Fetch protocol data immediately and update meta tags
+                fetchProtocolForMetaTags(protocolId);
             }
         })();
         
@@ -448,12 +447,36 @@
             updateMetaTag('description', shortDescription);
         }
         
-        // Update Open Graph meta tags from URL parameters (for social sharing)
-        function updateOpenGraphMetaFromParams(protocolName, protocolDescription, protocolId) {
-            const description = protocolDescription || 'Learn about this health optimization protocol.';
+        // Fetch protocol data immediately for meta tags (runs before DOM ready)
+        async function fetchProtocolForMetaTags(protocolId) {
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/protocols?id=eq.${protocolId}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const protocols = await response.json();
+                    if (protocols && protocols.length > 0) {
+                        const protocol = protocols[0];
+                        updateOpenGraphMetaFromData(protocol);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching protocol for meta tags:', error);
+            }
+        }
+        
+        // Update Open Graph meta tags from protocol data
+        function updateOpenGraphMetaFromData(protocol) {
+            const protocolName = protocol.name || 'Protocol Details';
+            const protocolDescription = protocol.description || 'Learn about this health optimization protocol.';
             
             // Truncate description if it's too long
-            let shortDescription = description;
+            let shortDescription = protocolDescription;
             if (shortDescription.length > 150) {
                 shortDescription = shortDescription.substring(0, 147) + '...';
             }
@@ -464,7 +487,7 @@
             // Update Open Graph meta tags
             updateMetaTag('og:title', `${protocolName} - STUDL.IO`);
             updateMetaTag('og:description', shortDescription);
-            updateMetaTag('og:url', `https://studl.io/protocol-detail.html?id=${protocolId}`);
+            updateMetaTag('og:url', `https://studl.io/protocol-detail.html?id=${protocol.id}`);
             
             // Update Twitter Card meta tags
             updateMetaTag('twitter:title', `${protocolName} - STUDL.IO`);

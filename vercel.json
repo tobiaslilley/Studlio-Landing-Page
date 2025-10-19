@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "api/protocol/[id].js": {
+      "runtime": "nodejs18.x"
+    },
+    "api/protocol/[id]/meta.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/protocol/(.*)/meta",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html"
+        }
+      ]
+    }
+  ]
+}

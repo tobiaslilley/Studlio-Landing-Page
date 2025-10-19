@@ -615,11 +615,11 @@
                 const protocolName = encodeURIComponent(protocol.name || 'Protocol');
                 const protocolDescription = encodeURIComponent(protocol.description || '');
                 
-                // Navigate to protocol detail page with ID (PHP will fetch the data server-side)
-                window.location.href = `protocol.php?id=${protocolId}`;
+                // Navigate to protocol detail page with proper meta tags for social sharing
+                window.location.href = `/api/protocol/${protocolId}/meta`;
             } else {
                 // Fallback to just ID if protocol not found
-                window.location.href = `protocol.php?id=${protocolId}`;
+                window.location.href = `/api/protocol/${protocolId}/meta`;
             }
         }
         
