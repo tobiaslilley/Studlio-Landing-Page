@@ -2449,7 +2449,10 @@ textarea:focus {
     border: 1px solid rgba(51, 57, 65, 0.1);
     word-wrap: break-word;
     overflow-wrap: break-word;
-    overflow: visible;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    display: block !important;
 }
 
 .protocol-detail-header {
@@ -2506,6 +2509,9 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
+    overflow: visible;
+    height: auto;
+    max-height: none;
 }
 
 .protocol-detail-description h3,
@@ -2535,9 +2541,10 @@ textarea:focus {
     color: #666;
     line-height: 1.7;
     font-size: 1.1rem;
-    overflow: visible;
-    height: auto;
-    max-height: none;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    display: block !important;
 }
 
 .markdown-content h1,
