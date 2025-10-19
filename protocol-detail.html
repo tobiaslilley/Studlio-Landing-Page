@@ -41,6 +41,18 @@
         // Initialize Supabase client
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
+        // Update meta tags immediately if protocol data is available in URL params
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const protocolId = urlParams.get('id');
+            const protocolName = urlParams.get('name');
+            const protocolDescription = urlParams.get('description');
+            
+            if (protocolId && protocolName) {
+                updateOpenGraphMetaFromParams(protocolName, protocolDescription, protocolId);
+            }
+        })();
+        
         // Check authentication status
         document.addEventListener('DOMContentLoaded', async () => {
             await checkAuthStatus();
@@ -427,6 +439,32 @@
             updateMetaTag('og:title', `${protocolName} - STUDL.IO`);
             updateMetaTag('og:description', shortDescription);
             updateMetaTag('og:url', `https://studl.io/protocol-detail.html?id=${protocol.id}`);
+            
+            // Update Twitter Card meta tags
+            updateMetaTag('twitter:title', `${protocolName} - STUDL.IO`);
+            updateMetaTag('twitter:description', shortDescription);
+            
+            // Update regular meta description
+            updateMetaTag('description', shortDescription);
+        }
+        
+        // Update Open Graph meta tags from URL parameters (for social sharing)
+        function updateOpenGraphMetaFromParams(protocolName, protocolDescription, protocolId) {
+            const description = protocolDescription || 'Learn about this health optimization protocol.';
+            
+            // Truncate description if it's too long
+            let shortDescription = description;
+            if (shortDescription.length > 150) {
+                shortDescription = shortDescription.substring(0, 147) + '...';
+            }
+            
+            // Update page title
+            document.title = `${protocolName} - STUDL.IO`;
+            
+            // Update Open Graph meta tags
+            updateMetaTag('og:title', `${protocolName} - STUDL.IO`);
+            updateMetaTag('og:description', shortDescription);
+            updateMetaTag('og:url', `https://studl.io/protocol-detail.html?id=${protocolId}`);
             
             // Update Twitter Card meta tags
             updateMetaTag('twitter:title', `${protocolName} - STUDL.IO`);
