@@ -2427,7 +2427,7 @@ textarea:focus {
 
 /* Protocol Detail Page */
 .protocol-detail {
-    padding: 10rem 0 5rem; /* Consistent padding accounting for fixed header */
+    padding: 12rem 0 5rem; /* Increased padding to account for fixed header and ensure back button is visible */
     min-height: 100vh;
     background-color: #fafafa;
 }
@@ -2760,7 +2760,7 @@ textarea:focus {
 /* Responsive Design for Protocol Detail Page */
 @media (max-width: 768px) {
     .protocol-detail {
-        padding: 8rem 0 4rem;
+        padding: 10rem 0 4rem; /* Increased padding to ensure back button is visible on mobile */
     }
     
     .protocol-detail-card {
@@ -2803,7 +2803,7 @@ textarea:focus {
 
 @media (max-width: 480px) {
     .protocol-detail {
-        padding: 6rem 0 3rem;
+        padding: 8rem 0 3rem; /* Increased padding to ensure back button is visible on small mobile */
     }
     
     .protocol-detail-card {

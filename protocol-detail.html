@@ -23,9 +23,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="Assets/Website-Favicon-Color.svg">
     
-    <!-- Preload fonts for better performance -->
-    <link rel="preload" href="Assets/Sanger.ttf" as="font" type="font/ttf" crossorigin="anonymous">
-    <link rel="preload" href="Assets/Cartograph-Sans-Light.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+    <!-- Fonts will be loaded by CSS -->
     
     <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
@@ -144,7 +142,7 @@
             <!-- Back Button -->
             <div class="back-button-container">
                 <a href="protocols.html" class="btn btn-secondary">
-                    ← Back to Protocols
+                    ← Back to Database
                 </a>
             </div>
             
@@ -258,7 +256,7 @@
                 loadingEl.style.display = 'none';
                 
                 // Display protocol details
-                displayProtocolDetail(protocol, metricsMap);
+                displayProtocolDetail(protocol, allMetricsMap);
                 contentEl.style.display = 'block';
                 
             } catch (error) {
