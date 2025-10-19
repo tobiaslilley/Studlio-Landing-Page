@@ -1,11 +1,11 @@
-import { createClient } from '@supabase/supabase-js'
+const { createClient } = require('@supabase/supabase-js')
 
 const supabaseUrl = 'https://htizxlmrzfehvpupvwbn.supabase.co'
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY'
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   const { id } = req.query
 
   if (!id) {
