@@ -381,7 +381,7 @@
                     
                     <div class="protocol-detail-content-inner">
                         <div class="protocol-detail-description">
-                            <div class="markdown-content">${parseMarkdown(protocol.description || 'No description available.')}</div>
+                            <div class="markdown-content">${parseMarkdown(protocol.fullDescription || protocol.description || 'No description available.')}</div>
                             
                             ${protocol.default_value && protocol.unit && protocol.unit !== '—' ? `
                                 <div class="typical-value">
@@ -460,7 +460,7 @@
         // Update Open Graph meta tags with protocol-specific information
         function updateOpenGraphMeta(protocol) {
             const protocolName = protocol.name || 'Protocol Details';
-            const protocolDescription = protocol.description || 'Learn about this health optimization protocol.';
+            const protocolDescription = protocol.fullDescription || protocol.description || 'Learn about this health optimization protocol.';
             
             // Truncate description if it's too long (OG descriptions work best under 160 characters)
             let shortDescription = protocolDescription;
