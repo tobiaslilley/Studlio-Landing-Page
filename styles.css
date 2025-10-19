@@ -82,6 +82,9 @@ p {
     width: 100%;
     z-index: 1000;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Ensure banner doesn't overlap content */
+    max-height: 4rem;
+    overflow: hidden;
 }
 
 .dev-banner p {
@@ -631,10 +634,12 @@ p {
 @media (max-width: 480px) {
     .dev-banner {
         padding: 0.4rem 0;
+        max-height: 3.5rem; /* Smaller max height on mobile */
     }
     
     .dev-banner p {
         font-size: 0.85rem;
+        line-height: 1.2;
     }
     
     .navbar {
@@ -652,6 +657,8 @@ p {
     
     .hero {
         padding: 6rem 0 3rem;
+        /* Add bottom padding to prevent MailChimp popup overlap */
+        padding-bottom: 5rem;
     }
     
     .hero-container {
@@ -771,6 +778,32 @@ textarea:focus {
     
     .hero-logo {
         animation: none;
+    }
+}
+
+/* MailChimp popup overlap fixes */
+@media (max-width: 768px) {
+    /* Ensure MailChimp popup doesn't overlap important content */
+    .hero-database-button {
+        margin-bottom: 2rem; /* Add space for potential popup */
+    }
+    
+    /* Adjust hero section padding to account for potential popup */
+    .hero {
+        padding-bottom: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* More aggressive spacing on small mobile */
+    .hero-database-button {
+        margin-bottom: 3rem; /* Extra space for popup */
+    }
+    
+    /* Ensure database button is always visible */
+    .btn-database {
+        position: relative;
+        z-index: 1;
     }
 }
 
