@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Citations - STUDL.IO</title>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Citation Debug Tool</h1>
+    <div id="debug-output"></div>
+    
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://htizxlmrzfehvpupvwbn.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0aXp4bG1yemZlaHZwdXB2d2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYxMTY3NDEsImV4cCI6MjA3MTY5Mjc0MX0.pBC8d5zXG6DZeU3atMZEqOgY4WG8Mh7T0m2tVk5CcUY';
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        const debugOutput = document.getElementById('debug-output');
+        
+        async function debugCitations() {
+            try {
+                // Fetch all protocols with their citations
+                const { data: protocols, error } = await supabase
+                    .from('protocols')
+                    .select('id, name, citations')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    debugOutput.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                    return;
+                }
+                
+                debugOutput.innerHTML = `
+                    <h2>Protocols in Database (${protocols.length} total)</h2>
+                    ${protocols.map(protocol => `
+                        <div style="border: 1px solid #ddd; padding: 10px; margin: 10px 0;">
+                            <h3>${protocol.name}</h3>
+                            <p><strong>ID:</strong> ${protocol.id}</p>
+                            <p><strong>Citations:</strong></p>
+                            <pre style="background: #f5f5f5; padding: 10px; overflow-x: auto;">
+${JSON.stringify(protocol.citations, null, 2)}
+                            </pre>
+                        </div>
+                    `).join('')}
+                `;
+                
+            } catch (error) {
+                debugOutput.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+        
+        // Run debug on page load
+        debugCitations();
+    </script>
+</body>
+</html>
+

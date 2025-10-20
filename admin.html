@@ -778,7 +778,6 @@
             
             // Get citations from the new citation management system
             const citations = getAllCitations();
-            console.log('Citations being saved:', citations);
             
             const protocolData = {
                 name: formData.get('name'),
@@ -790,67 +789,20 @@
                 is_default: formData.get('is_default') === 'on',
                 metric_ids: Array.from(document.getElementById('protocolMetricIds').selectedOptions).map(option => option.value)
             };
-            
-            console.log('Protocol data being sent:', protocolData);
 
             const protocolId = formData.get('id');
 
             try {
                 if (protocolId) {
                     // Update existing protocol
-                    console.log('Updating protocol with ID:', protocolId);
-                    console.log('Update data:', protocolData);
-                    
-                    // First, let's check if the protocol exists
-                    const { data: existingProtocol, error: fetchError } = await supabase
+                    const { data, error } = await supabase
                         .from('protocols')
-                        .select('id, name, citations')
-                        .eq('id', protocolId)
-                        .single();
-                    
-                    console.log('Existing protocol check:', { existingProtocol, fetchError });
-                    console.log('Current citations in DB:', existingProtocol.citations);
-                    
-                    // Try updating just the citations field first
-                    const { data: citationUpdate, error: citationError } = await supabase
-                        .from('protocols')
-                        .update({ citations: protocolData.citations })
+                        .update(protocolData)
                         .eq('id', protocolId)
                         .select();
 
-                    console.log('Citation-only update response:', { citationUpdate, citationError });
-                    
-                    if (citationError) {
-                        console.error('Citation update failed:', citationError);
-                        // Fall back to full update
-                        const { data, error } = await supabase
-                            .from('protocols')
-                            .update(protocolData)
-                            .eq('id', protocolId)
-                            .select();
-
-                        console.log('Full update response:', { data, error });
-                        
-                        if (error) throw error;
-                        
-                        if (data && data.length === 0) {
-                            console.warn('No rows were updated - protocol might not exist or ID mismatch');
-                            alert('Warning: No rows were updated. Please check if the protocol exists.');
-                        } else {
-                            alert('Protocol updated successfully!');
-                        }
-                    } else {
-                        console.log('Citation update successful!');
-                        
-                        // Simple verification - just show what we tried to save
-                        console.log('✅ Citation update completed');
-                        console.log('Citations we tried to save:', protocolData.citations);
-                        alert('Protocol citations updated successfully!');
-                        
-                        // Close modal and refresh the list to see if changes appear
-                        closeProtocolModal();
-                        loadProtocolsForManagement();
-                    }
+                    if (error) throw error;
+                    alert('Protocol updated successfully!');
                 } else {
                     // Create new protocol
                     console.log('Creating new protocol with data:', protocolData);
@@ -1278,18 +1230,9 @@
             const citationItems = container.querySelectorAll('.citation-item');
             const citations = [];
             
-            console.log('Found citation items:', citationItems.length);
-            
-            citationItems.forEach((item, index) => {
+            citationItems.forEach(item => {
                 const titleInput = item.querySelector('.citation-title-input');
                 const urlInput = item.querySelector('.citation-url-input');
-                
-                console.log(`Citation ${index}:`, {
-                    titleInput: titleInput,
-                    urlInput: urlInput,
-                    titleValue: titleInput ? titleInput.value : 'no title input',
-                    urlValue: urlInput ? urlInput.value : 'no url input'
-                });
                 
                 if (titleInput && urlInput) {
                     const title = titleInput.value.trim();
@@ -1305,7 +1248,6 @@
                 }
             });
             
-            console.log('Final citations array:', citations);
             return citations;
         }
 
