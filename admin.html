@@ -809,22 +809,39 @@
                         .single();
                     
                     console.log('Existing protocol check:', { existingProtocol, fetchError });
+                    console.log('Current citations in DB:', existingProtocol.citations);
                     
-                    const { data, error } = await supabase
+                    // Try updating just the citations field first
+                    const { data: citationUpdate, error: citationError } = await supabase
                         .from('protocols')
-                        .update(protocolData)
+                        .update({ citations: protocolData.citations })
                         .eq('id', protocolId)
                         .select();
 
-                    console.log('Update response:', { data, error });
+                    console.log('Citation-only update response:', { citationUpdate, citationError });
                     
-                    if (error) throw error;
-                    
-                    if (data && data.length === 0) {
-                        console.warn('No rows were updated - protocol might not exist or ID mismatch');
-                        alert('Warning: No rows were updated. Please check if the protocol exists.');
+                    if (citationError) {
+                        console.error('Citation update failed:', citationError);
+                        // Fall back to full update
+                        const { data, error } = await supabase
+                            .from('protocols')
+                            .update(protocolData)
+                            .eq('id', protocolId)
+                            .select();
+
+                        console.log('Full update response:', { data, error });
+                        
+                        if (error) throw error;
+                        
+                        if (data && data.length === 0) {
+                            console.warn('No rows were updated - protocol might not exist or ID mismatch');
+                            alert('Warning: No rows were updated. Please check if the protocol exists.');
+                        } else {
+                            alert('Protocol updated successfully!');
+                        }
                     } else {
-                        alert('Protocol updated successfully!');
+                        console.log('Citation update successful!');
+                        alert('Protocol citations updated successfully!');
                     }
                 } else {
                     // Create new protocol
