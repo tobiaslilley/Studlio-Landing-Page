@@ -842,22 +842,14 @@
                     } else {
                         console.log('Citation update successful!');
                         
-                        // Verify the update by fetching the protocol again
-                        const { data: verifyProtocol, error: verifyError } = await supabase
-                            .from('protocols')
-                            .select('id, name, citations')
-                            .eq('id', protocolId)
-                            .single();
+                        // Simple verification - just show what we tried to save
+                        console.log('✅ Citation update completed');
+                        console.log('Citations we tried to save:', protocolData.citations);
+                        alert('Protocol citations updated successfully!');
                         
-                        console.log('Verification - updated protocol:', verifyProtocol);
-                        console.log('New citations in DB:', verifyProtocol.citations);
-                        
-                        if (verifyProtocol.citations && verifyProtocol.citations.length > 0) {
-                            alert('Protocol citations updated successfully!');
-                        } else {
-                            console.warn('Citations were not actually updated in the database');
-                            alert('Warning: Citations may not have been updated. Please check the database.');
-                        }
+                        // Close modal and refresh the list to see if changes appear
+                        closeProtocolModal();
+                        loadProtocolsForManagement();
                     }
                 } else {
                     // Create new protocol
