@@ -841,7 +841,23 @@
                         }
                     } else {
                         console.log('Citation update successful!');
-                        alert('Protocol citations updated successfully!');
+                        
+                        // Verify the update by fetching the protocol again
+                        const { data: verifyProtocol, error: verifyError } = await supabase
+                            .from('protocols')
+                            .select('id, name, citations')
+                            .eq('id', protocolId)
+                            .single();
+                        
+                        console.log('Verification - updated protocol:', verifyProtocol);
+                        console.log('New citations in DB:', verifyProtocol.citations);
+                        
+                        if (verifyProtocol.citations && verifyProtocol.citations.length > 0) {
+                            alert('Protocol citations updated successfully!');
+                        } else {
+                            console.warn('Citations were not actually updated in the database');
+                            alert('Warning: Citations may not have been updated. Please check the database.');
+                        }
                     }
                 } else {
                     // Create new protocol
