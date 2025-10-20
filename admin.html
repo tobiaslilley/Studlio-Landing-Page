@@ -801,6 +801,15 @@
                     console.log('Updating protocol with ID:', protocolId);
                     console.log('Update data:', protocolData);
                     
+                    // First, let's check if the protocol exists
+                    const { data: existingProtocol, error: fetchError } = await supabase
+                        .from('protocols')
+                        .select('id, name, citations')
+                        .eq('id', protocolId)
+                        .single();
+                    
+                    console.log('Existing protocol check:', { existingProtocol, fetchError });
+                    
                     const { data, error } = await supabase
                         .from('protocols')
                         .update(protocolData)
@@ -810,7 +819,13 @@
                     console.log('Update response:', { data, error });
                     
                     if (error) throw error;
-                    alert('Protocol updated successfully!');
+                    
+                    if (data && data.length === 0) {
+                        console.warn('No rows were updated - protocol might not exist or ID mismatch');
+                        alert('Warning: No rows were updated. Please check if the protocol exists.');
+                    } else {
+                        alert('Protocol updated successfully!');
+                    }
                 } else {
                     // Create new protocol
                     console.log('Creating new protocol with data:', protocolData);
