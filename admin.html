@@ -778,6 +778,7 @@
             
             // Get citations from the new citation management system
             const citations = getAllCitations();
+            console.log('Citations being saved:', citations);
             
             const protocolData = {
                 name: formData.get('name'),
@@ -789,25 +790,38 @@
                 is_default: formData.get('is_default') === 'on',
                 metric_ids: Array.from(document.getElementById('protocolMetricIds').selectedOptions).map(option => option.value)
             };
+            
+            console.log('Protocol data being sent:', protocolData);
 
             const protocolId = formData.get('id');
 
             try {
                 if (protocolId) {
                     // Update existing protocol
-                    const { error } = await supabase
+                    console.log('Updating protocol with ID:', protocolId);
+                    console.log('Update data:', protocolData);
+                    
+                    const { data, error } = await supabase
                         .from('protocols')
                         .update(protocolData)
-                        .eq('id', protocolId);
+                        .eq('id', protocolId)
+                        .select();
 
+                    console.log('Update response:', { data, error });
+                    
                     if (error) throw error;
                     alert('Protocol updated successfully!');
                 } else {
                     // Create new protocol
-                    const { error } = await supabase
+                    console.log('Creating new protocol with data:', protocolData);
+                    
+                    const { data, error } = await supabase
                         .from('protocols')
-                        .insert(protocolData);
+                        .insert(protocolData)
+                        .select();
 
+                    console.log('Insert response:', { data, error });
+                    
                     if (error) throw error;
                     alert('Protocol created successfully!');
                 }
@@ -1224,9 +1238,18 @@
             const citationItems = container.querySelectorAll('.citation-item');
             const citations = [];
             
-            citationItems.forEach(item => {
+            console.log('Found citation items:', citationItems.length);
+            
+            citationItems.forEach((item, index) => {
                 const titleInput = item.querySelector('.citation-title-input');
                 const urlInput = item.querySelector('.citation-url-input');
+                
+                console.log(`Citation ${index}:`, {
+                    titleInput: titleInput,
+                    urlInput: urlInput,
+                    titleValue: titleInput ? titleInput.value : 'no title input',
+                    urlValue: urlInput ? urlInput.value : 'no url input'
+                });
                 
                 if (titleInput && urlInput) {
                     const title = titleInput.value.trim();
@@ -1242,6 +1265,7 @@
                 }
             });
             
+            console.log('Final citations array:', citations);
             return citations;
         }
 
