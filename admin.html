@@ -650,7 +650,14 @@
                             ${protocol.citations && protocol.citations.length > 0 ? `<span class="citations-count">${protocol.citations.length} citation${protocol.citations.length === 1 ? '' : 's'}</span>` : ''}
                         </p>
                         <p class="item-description">${escapeHtml(protocol.description || 'No description')}</p>
-                        ${protocol.citations && protocol.citations.length > 0 ? `<div class="citations-preview"><strong>Citations:</strong> ${protocol.citations.slice(0, 2).map(citation => escapeHtml(citation)).join('; ')}${protocol.citations.length > 2 ? '...' : ''}</div>` : ''}
+                        ${protocol.citations && protocol.citations.length > 0 ? `<div class="citations-preview"><strong>Citations:</strong> ${protocol.citations.slice(0, 2).map(citation => {
+                            if (typeof citation === 'string') {
+                                return escapeHtml(citation);
+                            } else if (citation && citation.title) {
+                                return escapeHtml(citation.title);
+                            }
+                            return '';
+                        }).filter(title => title).join('; ')}${protocol.citations.length > 2 ? '...' : ''}</div>` : ''}
                     </div>
                     <div class="item-actions">
                         <button class="btn btn-small btn-secondary" onclick="editProtocol('${protocol.id}')">Edit</button>
@@ -1115,7 +1122,14 @@
                 protocol.name.toLowerCase().includes(searchTerm) ||
                 protocol.category.toLowerCase().includes(searchTerm) ||
                 (protocol.description && protocol.description.toLowerCase().includes(searchTerm)) ||
-                (protocol.citations && protocol.citations.some(citation => citation.toLowerCase().includes(searchTerm)))
+                (protocol.citations && protocol.citations.some(citation => {
+                    if (typeof citation === 'string') {
+                        return citation.toLowerCase().includes(searchTerm);
+                    } else if (citation && citation.title) {
+                        return citation.title.toLowerCase().includes(searchTerm);
+                    }
+                    return false;
+                }))
             );
             displayProtocolsForManagement(filteredProtocols);
         });
@@ -1149,25 +1163,45 @@
         // ===== CITATION MANAGEMENT =====
 
         // Add a new citation field
-        function addCitationField(citationText = '') {
+        function addCitationField(citationData = {}) {
             const container = document.getElementById('citationsContainer');
             const citationId = 'citation_' + Date.now();
             
             const citationDiv = document.createElement('div');
             citationDiv.className = 'citation-item';
-            citationDiv.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start;';
+            citationDiv.style.cssText = 'border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; background-color: #f8f9fa;';
             
             citationDiv.innerHTML = `
-                <textarea 
-                    id="${citationId}" 
-                    class="citation-input" 
-                    placeholder="Enter complete citation (e.g., Author, A. (2024). Title. Journal.)" 
-                    rows="2"
-                    style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; resize: vertical;"
-                >${citationText}</textarea>
-                <button type="button" class="btn btn-danger btn-small" onclick="removeCitationField(this)" style="flex-shrink: 0; padding: 8px 12px;">
-                    Remove
-                </button>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <h4 style="margin: 0; color: #495057; font-size: 0.9rem;">Citation ${container.children.length + 1}</h4>
+                    <button type="button" class="btn btn-danger btn-small" onclick="removeCitationField(this)" style="padding: 4px 8px; font-size: 0.8rem;">
+                        Remove
+                    </button>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div>
+                        <label style="display: block; font-weight: 600; color: #495057; margin-bottom: 5px; font-size: 0.9rem;">Title *</label>
+                        <input 
+                            type="text" 
+                            id="${citationId}_title" 
+                            class="citation-title-input" 
+                            placeholder="Enter citation title (e.g., Study on Sleep Optimization)" 
+                            value="${citationData.title || ''}"
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"
+                        />
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 600; color: #495057; margin-bottom: 5px; font-size: 0.9rem;">URL *</label>
+                        <input 
+                            type="url" 
+                            id="${citationId}_url" 
+                            class="citation-url-input" 
+                            placeholder="https://example.com/study-link" 
+                            value="${citationData.url || ''}"
+                            style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;"
+                        />
+                    </div>
+                </div>
             `;
             
             container.appendChild(citationDiv);
@@ -1184,16 +1218,27 @@
             container.innerHTML = '';
         }
 
-        // Get all citations as an array
+        // Get all citations as an array of objects
         function getAllCitations() {
             const container = document.getElementById('citationsContainer');
-            const citationInputs = container.querySelectorAll('.citation-input');
+            const citationItems = container.querySelectorAll('.citation-item');
             const citations = [];
             
-            citationInputs.forEach(input => {
-                const text = input.value.trim();
-                if (text) {
-                    citations.push(text);
+            citationItems.forEach(item => {
+                const titleInput = item.querySelector('.citation-title-input');
+                const urlInput = item.querySelector('.citation-url-input');
+                
+                if (titleInput && urlInput) {
+                    const title = titleInput.value.trim();
+                    const url = urlInput.value.trim();
+                    
+                    // Only add if both title and URL are provided
+                    if (title && url) {
+                        citations.push({
+                            title: title,
+                            url: url
+                        });
+                    }
                 }
             });
             
@@ -1206,7 +1251,20 @@
             
             if (citations && citations.length > 0) {
                 citations.forEach(citation => {
-                    addCitationField(citation);
+                    // Handle both old string format and new object format
+                    if (typeof citation === 'string') {
+                        // Legacy format - create a basic object
+                        addCitationField({
+                            title: citation,
+                            url: ''
+                        });
+                    } else if (citation && (citation.title || citation.name)) {
+                        // New object format
+                        addCitationField({
+                            title: citation.title || citation.name,
+                            url: citation.url || ''
+                        });
+                    }
                 });
             } else {
                 // Add one empty field by default
