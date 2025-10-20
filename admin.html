@@ -312,9 +312,14 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="protocolCitations">Citations</label>
-                    <textarea id="protocolCitations" name="citations" rows="3" placeholder="Enter citations as JSON array, e.g., [&quot;Author, A. (2024). Title. Journal.&quot;, &quot;Another citation...&quot;]"></textarea>
-                    <small>Enter citations as a JSON array of strings. Each citation should be a complete reference.</small>
+                    <label>Citations</label>
+                    <div id="citationsContainer">
+                        <!-- Citations will be dynamically added here -->
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-small" onclick="addCitationField()" style="margin-top: 10px;">
+                        + Add Citation
+                    </button>
+                    <small>Add scientific references and sources for this protocol. Each citation should be a complete reference.</small>
                 </div>
                 
                 <div class="form-group">
@@ -661,6 +666,8 @@
             document.getElementById('protocolForm').reset();
             document.getElementById('protocolId').value = '';
             populateHealthMetricsDropdown();
+            // Initialize citations with one empty field
+            loadCitations([]);
             document.getElementById('protocolModal').style.display = 'block';
         }
 
@@ -683,7 +690,8 @@
                 document.getElementById('protocolDescription').value = protocol.description || '';
                 document.getElementById('protocolUnit').value = protocol.unit || '';
                 document.getElementById('protocolDefaultValue').value = protocol.default_value || '';
-                document.getElementById('protocolCitations').value = protocol.citations ? JSON.stringify(protocol.citations, null, 2) : '[]';
+                // Load citations using the new system
+                loadCitations(protocol.citations || []);
                 document.getElementById('protocolIsDefault').checked = protocol.is_default || false;
 
                 // Populate health metrics dropdown and select current ones
@@ -761,18 +769,8 @@
 
             const formData = new FormData(e.target);
             
-            // Parse citations JSON
-            let citations = [];
-            try {
-                const citationsText = formData.get('citations') || '[]';
-                citations = JSON.parse(citationsText);
-                if (!Array.isArray(citations)) {
-                    throw new Error('Citations must be an array');
-                }
-            } catch (error) {
-                alert('Error parsing citations: ' + error.message + '\nPlease ensure citations are in valid JSON array format.');
-                return;
-            }
+            // Get citations from the new citation management system
+            const citations = getAllCitations();
             
             const protocolData = {
                 name: formData.get('name'),
@@ -1147,6 +1145,74 @@
             });
             displayHealthMetricsForManagement(filteredMetrics);
         });
+
+        // ===== CITATION MANAGEMENT =====
+
+        // Add a new citation field
+        function addCitationField(citationText = '') {
+            const container = document.getElementById('citationsContainer');
+            const citationId = 'citation_' + Date.now();
+            
+            const citationDiv = document.createElement('div');
+            citationDiv.className = 'citation-item';
+            citationDiv.style.cssText = 'display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start;';
+            
+            citationDiv.innerHTML = `
+                <textarea 
+                    id="${citationId}" 
+                    class="citation-input" 
+                    placeholder="Enter complete citation (e.g., Author, A. (2024). Title. Journal.)" 
+                    rows="2"
+                    style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit; resize: vertical;"
+                >${citationText}</textarea>
+                <button type="button" class="btn btn-danger btn-small" onclick="removeCitationField(this)" style="flex-shrink: 0; padding: 8px 12px;">
+                    Remove
+                </button>
+            `;
+            
+            container.appendChild(citationDiv);
+        }
+
+        // Remove a citation field
+        function removeCitationField(button) {
+            button.parentElement.remove();
+        }
+
+        // Clear all citations
+        function clearAllCitations() {
+            const container = document.getElementById('citationsContainer');
+            container.innerHTML = '';
+        }
+
+        // Get all citations as an array
+        function getAllCitations() {
+            const container = document.getElementById('citationsContainer');
+            const citationInputs = container.querySelectorAll('.citation-input');
+            const citations = [];
+            
+            citationInputs.forEach(input => {
+                const text = input.value.trim();
+                if (text) {
+                    citations.push(text);
+                }
+            });
+            
+            return citations;
+        }
+
+        // Load citations into the form
+        function loadCitations(citations) {
+            clearAllCitations();
+            
+            if (citations && citations.length > 0) {
+                citations.forEach(citation => {
+                    addCitationField(citation);
+                });
+            } else {
+                // Add one empty field by default
+                addCitationField();
+            }
+        }
     </script>
 </body>
 </html>
