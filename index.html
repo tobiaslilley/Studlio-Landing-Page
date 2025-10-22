@@ -50,10 +50,11 @@
                 ☰
             </button>
             <div class="nav-links" role="menubar">
+                <a href="#app-visuals" role="menuitem">App Preview</a>
                 <a href="#features" role="menuitem">Features</a>
                 <a href="#download" role="menuitem">Download</a>
                 <a href="#contact" role="menuitem">Contact</a>
-                <a href="protocols.html" role="menuitem">Protocols</a>
+                <a href="protocols.html" role="menuitem">Biohacking Database</a>
                 <div class="social-links">
                     <a href="https://www.youtube.com/@studlio" target="_blank" rel="noopener noreferrer" aria-label="Follow us on YouTube" class="social-link">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -86,11 +87,11 @@
     <section id="main-content" class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="hero-title">Your Personal Health Protocol Manager</h1>
-                <p class="hero-subtitle">Transform your health optimization journey with Biohack - the intelligent iOS app that helps you track, manage, and optimize your biohacking protocols. Whether you're experimenting with supplements, tracking biomarkers, or monitoring lifestyle interventions, STUDL.IO provides the tools you need to measure what matters.</p>
+                <h1 class="hero-title">Your Personal Biohacking Manager</h1>
+                <p class="hero-subtitle">Transform your health optimization journey with STUDL.IO - the intelligent iOS app that helps you track, manage, and optimize your biohacking protocols. Whether you're experimenting with supplements, tracking biomarkers, or monitoring lifestyle interventions, STUDL.IO provides the tools you need to measure what matters.</p>
                 <div class="hero-buttons">
                     <a href="#download" class="btn btn-primary disabled">Coming Soon</a>
-                    <a href="#features" class="btn btn-secondary">Learn More</a>
+                    <a href="#app-visuals" class="btn btn-secondary">Learn More</a>
                 </div>
                 <div class="hero-database-button">
                     <a href="protocols.html" class="btn btn-database">Explore STUDL.IO Biohacking Database</a>
@@ -102,40 +103,112 @@
         </div>
     </section>
 
+    <!-- App Store Visuals Section -->
+    <section id="app-visuals" class="app-visuals">
+        <div class="container">
+            <h2 class="section-title">See STUDL.IO in Action</h2>
+            <p class="app-visuals-subtitle">Get a preview of what's coming with these app store visuals showcasing the STUDL.IO experience.</p>
+            <div class="app-visuals-carousel">
+                <div class="carousel-wrapper">
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="app-visuals-track">
+                            <div class="app-visual-item">
+                                <img src="Assets/App store visuals/1.png" alt="STUDL.IO App Screenshot 1" class="app-screenshot">
+                            </div>
+                            <div class="app-visual-item">
+                                <img src="Assets/App store visuals/2.png" alt="STUDL.IO App Screenshot 2" class="app-screenshot">
+                            </div>
+                            <div class="app-visual-item">
+                                <img src="Assets/App store visuals/3.png" alt="STUDL.IO App Screenshot 3" class="app-screenshot">
+                            </div>
+                            <div class="app-visual-item">
+                                <img src="Assets/App store visuals/4.png" alt="STUDL.IO App Screenshot 4" class="app-screenshot">
+                            </div>
+                            <div class="app-visual-item">
+                                <img src="Assets/App store visuals/5.png" alt="STUDL.IO App Screenshot 5" class="app-screenshot">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-btn carousel-prev" id="app-visuals-prev" aria-label="Previous screenshot">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-btn carousel-next" id="app-visuals-next" aria-label="Next screenshot">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="carousel-indicators" id="app-visuals-indicators">
+                    <button class="indicator active" data-slide="0" aria-label="Go to slide 1"></button>
+                    <button class="indicator" data-slide="1" aria-label="Go to slide 2"></button>
+                    <button class="indicator" data-slide="2" aria-label="Go to slide 3"></button>
+                    <button class="indicator" data-slide="3" aria-label="Go to slide 4"></button>
+                    <button class="indicator" data-slide="4" aria-label="Go to slide 5"></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Features Section -->
     <section id="features" class="features">
         <div class="container">
             <h2 class="section-title">Why Choose STUDL.IO?</h2>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🔬</div>
-                    <h3 class="feature-title">Protocol Management</h3>
-                    <p class="feature-description">Design your own protocols with specific metrics, dosages, and tracking parameters. Access pre-built protocols from the cloud, covering supplements, lifestyle interventions, and biomarker tracking. Organize protocols by type for easy management and toggle activation with tracking.</p>
+            <div class="features-carousel">
+                <div class="carousel-wrapper">
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="carousel-track">
+                        <div class="feature-card">
+                            <div class="feature-icon">🔬</div>
+                            <h3 class="feature-title">Protocol Management</h3>
+                            <p class="feature-description">Design your own protocols with specific metrics, dosages, and tracking parameters. Access pre-built protocols from the cloud, covering supplements, lifestyle interventions, and biomarker tracking. Organize protocols by type for easy management and toggle activation with tracking.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <h3 class="feature-title">Health Data Integration</h3>
+                            <p class="feature-description">Automatic integration with Apple health metrics including heart rate, sleep, steps, blood pressure, and more. See your latest health data alongside active protocols with real-time monitoring and historical trend analysis.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📈</div>
+                            <h3 class="feature-title">Progress Tracking & Analytics</h3>
+                            <p class="feature-description">Beautiful, interactive charts showing your health metrics over time. See how your protocols correlate with health improvements and identify patterns to optimize your biohacking approach.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔄</div>
+                            <h3 class="feature-title">Smart Data Management</h3>
+                            <p class="feature-description">Your protocols and data sync across devices from the cloud with offline capability. Your health data stays on your device - we only sync protocol definitions with automatic updates.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">✨</div>
+                            <h3 class="feature-title">User Experience</h3>
+                            <p class="feature-description">Clean, modern design that makes protocol management effortless. Activate/deactivate protocols with a single tap, find protocols quickly with powerful search and category filtering, and get guided setup.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔒</div>
+                            <h3 class="feature-title">Privacy & Security</h3>
+                            <p class="feature-description">Direct connection to Apple Health ensures data privacy. Health metrics are processed locally on your device with secure Supabase-powered authentication and transparent data usage policies.</p>
+                        </div>
+                        </div>
+                    </div>
+                    <button class="carousel-btn carousel-prev" id="carousel-prev" aria-label="Previous feature">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                        </svg>
+                    </button>
+                    <button class="carousel-btn carousel-next" id="carousel-next" aria-label="Next feature">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                        </svg>
+                    </button>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3 class="feature-title">Health Data Integration</h3>
-                    <p class="feature-description">Automatic integration with Apple health metrics including heart rate, sleep, steps, blood pressure, and more. See your latest health data alongside active protocols with real-time monitoring and historical trend analysis.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📈</div>
-                    <h3 class="feature-title">Progress Tracking & Analytics</h3>
-                    <p class="feature-description">Beautiful, interactive charts showing your health metrics over time. See how your protocols correlate with health improvements and identify patterns to optimize your biohacking approach.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <h3 class="feature-title">Smart Data Management</h3>
-                    <p class="feature-description">Your protocols and data sync across devices from the cloud with offline capability. Your health data stays on your device - we only sync protocol definitions with automatic updates.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">✨</div>
-                    <h3 class="feature-title">User Experience</h3>
-                    <p class="feature-description">Clean, modern design that makes protocol management effortless. Activate/deactivate protocols with a single tap, find protocols quickly with powerful search and category filtering, and get guided setup.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3 class="feature-title">Privacy & Security</h3>
-                    <p class="feature-description">Direct connection to Apple Health ensures data privacy. Health metrics are processed locally on your device with secure Supabase-powered authentication and transparent data usage policies.</p>
+                <div class="carousel-indicators" id="carousel-indicators">
+                    <button class="indicator active" data-slide="0" aria-label="Go to slide 1"></button>
+                    <button class="indicator" data-slide="1" aria-label="Go to slide 2"></button>
+                    <button class="indicator" data-slide="2" aria-label="Go to slide 3"></button>
+                    <button class="indicator" data-slide="3" aria-label="Go to slide 4"></button>
+                    <button class="indicator" data-slide="4" aria-label="Go to slide 5"></button>
+                    <button class="indicator" data-slide="5" aria-label="Go to slide 6"></button>
                 </div>
             </div>
         </div>
@@ -161,11 +234,8 @@
         <div class="container">
             <h2 class="section-title">Get in Touch</h2>
             <p class="contact-subtitle">Have questions or feedback? We'd love to hear from you!</p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <h3>Email</h3>
-                    <p><a href="mailto:studlio@proton.me">studlio@proton.me</a></p>
-                </div>
+            <div class="contact-button">
+                <a href="mailto:studlio@proton.me" class="btn btn-contact">Email STUDL.IO</a>
             </div>
         </div>
     </section>
@@ -178,6 +248,7 @@
                     <img src="Assets/Title-Only-Transparent.png" alt="STUDL.IO" class="footer-logo-img">
                 </div>
                 <div class="footer-links">
+                    <a href="#app-visuals">App Preview</a>
                     <a href="#features">Features</a>
                     <a href="#download">Download</a>
                     <a href="#contact">Contact</a>
@@ -216,6 +287,8 @@
             await handleMagicLinkAuth();
             await checkAuthStatus();
             initializeMobileNavigation();
+            initializeCarousel();
+            initializeAppVisualsCarousel();
         });
         
         // Initialize mobile navigation
@@ -251,6 +324,122 @@
                     }
                 });
             }
+        }
+        
+        // Initialize carousel functionality
+        function initializeCarousel() {
+            const track = document.getElementById('carousel-track');
+            const prevBtn = document.getElementById('carousel-prev');
+            const nextBtn = document.getElementById('carousel-next');
+            const indicators = document.querySelectorAll('.indicator');
+            
+            if (!track || !prevBtn || !nextBtn) {
+                console.log('Carousel elements not found');
+                return;
+            }
+            
+            let currentSlide = 0;
+            const totalSlides = track.children.length;
+            
+            console.log('Carousel initialized with', totalSlides, 'slides');
+            
+            function updateCarousel() {
+                const translateX = -currentSlide * 16.666;
+                track.style.transform = `translateX(${translateX}%)`;
+                console.log('Moving to slide', currentSlide, 'translateX:', translateX);
+                
+                // Update indicators
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentSlide);
+                });
+            }
+            
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            }
+            
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+            
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                updateCarousel();
+            }
+            
+            // Event listeners
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => goToSlide(index));
+            });
+            
+            // Initialize first slide
+            updateCarousel();
+            
+            // Auto-play carousel (optional)
+            setInterval(nextSlide, 5000); // Change slide every 5 seconds
+        }
+        
+        // Initialize app visuals carousel functionality
+        function initializeAppVisualsCarousel() {
+            const track = document.getElementById('app-visuals-track');
+            const prevBtn = document.getElementById('app-visuals-prev');
+            const nextBtn = document.getElementById('app-visuals-next');
+            const indicators = document.querySelectorAll('#app-visuals-indicators .indicator');
+            
+            if (!track || !prevBtn || !nextBtn) {
+                console.log('App visuals carousel elements not found');
+                return;
+            }
+            
+            let currentSlide = 0;
+            const totalSlides = track.children.length;
+            
+            console.log('App visuals carousel initialized with', totalSlides, 'slides');
+            
+            function updateCarousel() {
+                const translateX = -currentSlide * 20;
+                track.style.transform = `translateX(${translateX}%)`;
+                console.log('Moving to slide', currentSlide, 'translateX:', translateX);
+                
+                // Update indicators
+                indicators.forEach((indicator, index) => {
+                    indicator.classList.toggle('active', index === currentSlide);
+                });
+            }
+            
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % totalSlides;
+                updateCarousel();
+            }
+            
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            }
+            
+            function goToSlide(slideIndex) {
+                currentSlide = slideIndex;
+                updateCarousel();
+            }
+            
+            // Event listeners
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+            
+            indicators.forEach((indicator, index) => {
+                indicator.addEventListener('click', () => goToSlide(index));
+            });
+            
+            // Initialize first slide
+            updateCarousel();
+            
+            // Auto-play carousel (optional)
+            setInterval(nextSlide, 4000); // Change slide every 4 seconds
         }
         
         // Handle magic link authentication
